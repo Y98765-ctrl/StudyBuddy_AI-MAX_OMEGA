@@ -3,252 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StudyBuddy AI - Ultimate Hub</title>
+  <title>StudyBuddy AI - Infinity Hub</title>
 
   <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0b1020">
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0b1225" />
 
   <!-- Icons -->
-  <link rel="icon" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="brand">
-      <img src="icon-192.png" class="logo" alt="logo">
-      <div>
-        <div class="title">StudyBuddy AI</div>
-        <div class="subtitle">Ultimate Hub (All-in-One)</div>
-      </div>
-    </div>
 
-    <div class="top-actions">
-      <button class="btn small" onclick="toggleTheme()">🌙 Theme</button>
-      <button class="btn small" onclick="openAuth()">👤 Login</button>
-    </div>
-  </header>
+  <!-- APP WRAPPER -->
+  <div class="app">
 
-  <!-- NAV -->
-  <nav class="nav">
-    <button class="navbtn active" onclick="showPage('home')">🏠 Home</button>
-    <button class="navbtn" onclick="showPage('study')">📚 StudyBuddy</button>
-    <button class="navbtn" onclick="showPage('chat')">🤖 ChatGPT Clone</button>
-    <button class="navbtn" onclick="showPage('minecraft')">⛏️ Pro Minecraft</button>
-    <button class="navbtn" onclick="showPage('games')">🎮 Games Hub</button>
-    <button class="navbtn" onclick="showPage('settings')">⚙️ Settings</button>
-  </nav>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- HOME -->
-    <section id="page-home" class="page show">
-      <h1>Welcome 👋</h1>
-      <p class="muted">
-        This is your <b>StudyBuddy AI + Super ChatGPT Clone + Games Hub + Pro Minecraft</b> in one website.
-      </p>
-
-      <div class="cards">
-        <div class="card">
-          <h3>📚 StudyBuddy AI</h3>
-          <p>Exam Mode, Coding Mode, Explain Mode, Summarize Mode.</p>
-          <button class="btn" onclick="showPage('study')">Open StudyBuddy</button>
-        </div>
-
-        <div class="card">
-          <h3>🤖 ChatGPT Clone</h3>
-          <p>Smart chatbot with modes + export + reset.</p>
-          <button class="btn" onclick="showPage('chat')">Open Chat</button>
-        </div>
-
-        <div class="card">
-          <h3>⛏️ Pro Minecraft</h3>
-          <p>God Powers, Boss Respawn, Revive, Kill, World Destroy (Safe).</p>
-          <button class="btn" onclick="showPage('minecraft')">Open Minecraft</button>
-        </div>
-
-        <div class="card">
-          <h3>🎮 Infinity Games Hub</h3>
-          <p>Mini games & fun.</p>
-          <button class="btn" onclick="showPage('games')">Open Games</button>
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logoArea">
+        <img src="logo.png" class="logo" alt="Logo" />
+        <div>
+          <div class="title">StudyBuddy AI</div>
+          <div class="subtitle">Infinity Hub • Offline AI</div>
         </div>
       </div>
-    </section>
 
-    <!-- STUDYBUDDY -->
-    <section id="page-study" class="page">
-      <h2>📚 StudyBuddy AI</h2>
-
-      <div class="modebar">
-        <button class="chip active" onclick="setSBMode('study')">Study Mode</button>
-        <button class="chip" onclick="setSBMode('exam')">Exam Mode</button>
-        <button class="chip" onclick="setSBMode('coding')">Coding Mode</button>
-        <button class="chip" onclick="setSBMode('summarize')">Summarize</button>
-        <button class="chip" onclick="setSBMode('translate')">Translate</button>
+      <div class="headerBtns">
+        <button class="btn" id="themeBtn">🌗</button>
+        <button class="btn" id="exportBtn">⬇</button>
+        <button class="btn danger" id="resetBtn">⟲</button>
       </div>
+    </header>
 
-      <div class="chatbox">
-        <div id="sbChat" class="chatlog"></div>
-
-        <div class="chatinput">
-          <input id="sbInput" placeholder="Ask StudyBuddy AI..." onkeydown="if(event.key==='Enter'){sbSend()}">
-          <button class="btn" onclick="sbSend()">Send</button>
-        </div>
-
-        <div class="tools">
-          <button class="btn ghost" onclick="sbExport()">Export</button>
-          <button class="btn ghost" onclick="sbReset()">Reset</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- CHATGPT CLONE -->
-    <section id="page-chat" class="page">
-      <h2>🤖 Super ChatGPT Clone</h2>
-
-      <div class="modebar">
-        <button class="chip active" onclick="setCGMode('smart')">Smart</button>
-        <button class="chip" onclick="setCGMode('creative')">Creative</button>
-        <button class="chip" onclick="setCGMode('coding')">Coding</button>
-        <button class="chip" onclick="setCGMode('strict')">Strict</button>
-      </div>
-
-      <div class="chatbox">
-        <div id="cgChat" class="chatlog"></div>
-
-        <div class="chatinput">
-          <input id="cgInput" placeholder="Talk to AI..." onkeydown="if(event.key==='Enter'){cgSend()}">
-          <button class="btn" onclick="cgSend()">Send</button>
-        </div>
-
-        <div class="tools">
-          <button class="btn ghost" onclick="cgExport()">Export</button>
-          <button class="btn ghost" onclick="cgReset()">Reset</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- MINECRAFT -->
-    <section id="page-minecraft" class="page">
-      <h2>⛏️ Pro Minecraft Game</h2>
-
-      <div class="cards">
-        <div class="card">
-          <h3>🔥 God Powers</h3>
-          <p>Copy this command in Minecraft (Java 1.20+ recommended).</p>
-          <textarea class="code" readonly id="mcGodCmd"></textarea>
-          <button class="btn" onclick="copyText('mcGodCmd')">Copy</button>
-        </div>
-
-        <div class="card">
-          <h3>💀 Kill Mobs</h3>
-          <textarea class="code" readonly id="mcKillCmd">/kill @e[type=!player,distance=..50]</textarea>
-          <button class="btn" onclick="copyText('mcKillCmd')">Copy</button>
-        </div>
-
-        <div class="card">
-          <h3>❤️ Revive Player</h3>
-          <textarea class="code" readonly id="mcReviveCmd">/gamemode survival @p</textarea>
-          <button class="btn" onclick="copyText('mcReviveCmd')">Copy</button>
-        </div>
-
-        <div class="card">
-          <h3>🌍 Destroy World (SAFE)</h3>
-          <p>This removes blocks around you but keeps players safe.</p>
-          <textarea class="code" readonly id="mcDestroyCmd">/fill ~-15 ~-5 ~-15 ~15 ~10 ~15 air replace</textarea>
-          <button class="btn" onclick="copyText('mcDestroyCmd')">Copy</button>
-        </div>
-
-        <div class="card">
-          <h3>👑 Boss Respawn (Infinite)</h3>
-          <textarea class="code" readonly id="mcBossCmd">/summon minecraft:wither ~ ~1 ~</textarea>
-          <button class="btn" onclick="copyText('mcBossCmd')">Copy</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- GAMES -->
-    <section id="page-games" class="page">
-      <h2>🎮 Infinity Games Hub</h2>
-
-      <div class="cards">
-        <div class="card">
-          <h3>🎲 Dice</h3>
-          <p id="diceResult" class="big">🎲</p>
-          <button class="btn" onclick="rollDice()">Roll</button>
-        </div>
-
-        <div class="card">
-          <h3>🪙 Coin Flip</h3>
-          <p id="coinResult" class="big">🪙</p>
-          <button class="btn" onclick="flipCoin()">Flip</button>
-        </div>
-
-        <div class="card">
-          <h3>🔢 Random Number</h3>
-          <p id="randResult" class="big">0</p>
-          <button class="btn" onclick="randomNumber()">Generate</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SETTINGS -->
-    <section id="page-settings" class="page">
-      <h2>⚙️ Settings</h2>
-
+    <!-- LOGIN PAGE -->
+    <section id="page-login" class="page active">
       <div class="card">
-        <h3>Save & Storage</h3>
-        <button class="btn" onclick="clearAllData()">Clear All Saved Data</button>
-        <p class="muted">This will remove login + chat history.</p>
-      </div>
+        <h2>🔐 Login / Sign Up</h2>
+        <p class="muted">
+          This is an offline login system (LocalStorage).  
+          No server required. Works on GitHub Pages.
+        </p>
 
-      <div class="card">
-        <h3>Offline Mode</h3>
-        <p class="muted">This app works offline after first load.</p>
+        <div class="form">
+          <input id="authEmail" type="email" placeholder="Email address" autocomplete="username" />
+          <input id="authPass" type="password" placeholder="Password" autocomplete="current-password" />
+        </div>
+
+        <div class="row">
+          <button class="bigBtn" id="signupBtn">🆕 Sign Up</button>
+          <button class="bigBtn" id="loginBtn">✅ Login</button>
+        </div>
+
+        <button class="bigBtn ghost" id="guestBtn">👤 Use Without Login</button>
+
+        <div id="authMsg" class="msgBox"></div>
       </div>
     </section>
 
-  </main>
+    <!-- MAIN APP PAGE -->
+    <section id="page-app" class="page">
+      
+      <!-- TOP NAV -->
+      <nav class="tabs">
+        <button class="tab active" data-mode="chat">💬 Chat</button>
+        <button class="tab" data-mode="ai">🤖 AI Learn</button>
+        <button class="tab" data-mode="math">➗ Math</button>
+        <button class="tab" data-mode="quiz">🧠 Quiz</button>
+        <button class="tab" data-mode="games">🎮 Games</button>
+        <button class="tab" data-mode="islam">🕌 Islam</button>
+      </nav>
 
-  <!-- AUTH MODAL -->
-  <div id="authModal" class="modal">
-    <div class="modalBox">
-      <h2>👤 Account</h2>
-
-      <div class="tabs">
-        <button class="tab active" onclick="authTab('login')">Login</button>
-        <button class="tab" onclick="authTab('signup')">Sign Up</button>
-        <button class="tab" onclick="authTab('guest')">Guest</button>
+      <!-- USER BAR -->
+      <div class="userBar">
+        <div id="userLabel">👤 Guest Mode</div>
+        <button class="btn small danger" id="logoutBtn">Logout</button>
       </div>
 
-      <div id="auth-login" class="authPage show">
-        <input id="loginEmail" placeholder="Email">
-        <input id="loginPass" type="password" placeholder="Password">
-        <button class="btn" onclick="doLogin()">Login</button>
+      <!-- CHAT WINDOW -->
+      <div id="chat" class="chat"></div>
+
+      <!-- INPUT -->
+      <div class="bottom">
+        <input id="input" placeholder="Type here..." />
+        <button id="sendBtn">▶</button>
       </div>
 
-      <div id="auth-signup" class="authPage">
-        <input id="signupEmail" placeholder="Email">
-        <input id="signupPass" type="password" placeholder="Password">
-        <button class="btn" onclick="doSignup()">Create Account</button>
-      </div>
+    </section>
 
-      <div id="auth-guest" class="authPage">
-        <p class="muted">Use without login. Nothing will be saved.</p>
-        <button class="btn" onclick="useGuest()">Continue as Guest</button>
-      </div>
-
-      <button class="btn ghost" onclick="closeAuth()">Close</button>
-    </div>
   </div>
 
-  <!-- SCRIPT -->
   <script src="script.js"></script>
 </body>
 </html>
