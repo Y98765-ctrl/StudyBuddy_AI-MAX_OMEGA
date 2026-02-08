@@ -1,509 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>StudyBuddy AI - Ultimate Hub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyBuddy AI - Ultimate Hub</title>
 
-<style>
-/* ===== THEME ===== */
-:root{
-  --bg:#0b1225;
-  --card:#111a33;
-  --card2:#1b2a55;
-  --text:#ffffff;
-  --muted:rgba(255,255,255,.7);
-  --accent:#22c55e;
-  --accent2:#2563eb;
-  --danger:#ef4444;
-  --bot:#1f2937;
-  --user:#2563eb;
-  --border:rgba(255,255,255,.12);
-}
-.light{
-  --bg:#f3f4f6;
-  --card:#ffffff;
-  --card2:#e5e7eb;
-  --text:#000000;
-  --muted:rgba(0,0,0,.6);
-  --accent:#16a34a;
-  --accent2:#2563eb;
-  --danger:#dc2626;
-  --bot:#e5e7eb;
-  --user:#2563eb;
-  --border:rgba(0,0,0,.12);
-}
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1020">
 
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-}
+  <!-- Icons -->
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
 
-/* ===== APP LAYOUT ===== */
-.app{
-  width:980px;
-  max-width:100%;
-  min-height:100vh;
-  display:flex;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar{
-  width:270px;
-  background:linear-gradient(180deg,var(--card),rgba(0,0,0,.15));
-  border-right:1px solid var(--border);
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.brand{
-  font-weight:800;
-  font-size:18px;
-  padding:10px;
-  border-radius:12px;
-  background:rgba(255,255,255,.06);
-}
-.brand small{display:block;font-weight:400;color:var(--muted);margin-top:4px;}
-
-.sidebtn{
-  width:100%;
-  padding:11px 12px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-  text-align:left;
-  transition:.15s;
-}
-.sidebtn:hover{transform:translateY(-1px);background:rgba(255,255,255,.10);}
-.sidebtn.active{background:rgba(34,197,94,.22);border:1px solid rgba(34,197,94,.35);}
-
-.smallrow{
-  display:flex;
-  gap:8px;
-}
-.smallrow button{
-  flex:1;
-  padding:10px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-}
-.smallrow button:hover{background:rgba(255,255,255,.10);}
-
-.hr{height:1px;background:var(--border);margin:6px 0;}
-.footer{
-  margin-top:auto;
-  font-size:12px;
-  color:var(--muted);
-  padding:8px;
-  line-height:1.4;
-}
-
-/* ===== MAIN ===== */
-.main{
-  flex:1;
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.topbar{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--border);
-  padding:12px;
-  border-radius:14px;
-}
-.topbar .title{
-  font-weight:700;
-}
-.badge{
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  background:rgba(37,99,235,.18);
-  border:1px solid rgba(37,99,235,.35);
-}
-
-/* ===== PAGES ===== */
-.page{
-  display:none;
-  flex:1;
-  background:rgba(255,255,255,.04);
-  border:1px solid var(--border);
-  border-radius:14px;
-  overflow:hidden;
-}
-.page.active{display:flex;flex-direction:column;}
-
-/* ===== LOGIN ===== */
-.authWrap{
-  padding:16px;
-  display:flex;
-  gap:14px;
-  flex-wrap:wrap;
-}
-.authCard{
-  flex:1;
-  min-width:280px;
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-}
-.authCard h3{margin:0 0 8px 0;}
-.authCard input{
-  width:100%;
-  padding:10px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:rgba(0,0,0,.15);
-  color:var(--text);
-  outline:none;
-  margin:6px 0;
-}
-.authCard button{
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  background:var(--accent2);
-  color:white;
-  margin-top:8px;
-}
-.authCard button.secondary{
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-  border:1px solid var(--border);
-}
-.msgline{font-size:13px;margin-top:8px;color:var(--muted);}
-
-/* ===== CHAT ===== */
-.chatArea{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
-.modeBar{
-  display:flex;
-  gap:8px;
-  padding:12px;
-  border-bottom:1px solid var(--border);
-  background:rgba(255,255,255,.03);
-  flex-wrap:wrap;
-}
-.modeBar button{
-  padding:10px 12px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-}
-.modeBar button.active{
-  background:rgba(34,197,94,.22);
-  border:1px solid rgba(34,197,94,.35);
-}
-
-.chatWindow{
-  flex:1;
-  overflow:auto;
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.bubble{
-  max-width:80%;
-  padding:12px 14px;
-  border-radius:16px;
-  white-space:pre-wrap;
-  line-height:1.35;
-  border:1px solid var(--border);
-}
-.bubble.user{background:rgba(37,99,235,.20);align-self:flex-end;}
-.bubble.bot{background:rgba(255,255,255,.06);align-self:flex-start;}
-
-.inputBar{
-  display:flex;
-  gap:10px;
-  padding:12px;
-  border-top:1px solid var(--border);
-}
-.inputBar input{
-  flex:1;
-  padding:12px 14px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:rgba(0,0,0,.15);
-  color:var(--text);
-  outline:none;
-}
-.inputBar button{
-  padding:12px 16px;
-  border:none;
-  border-radius:999px;
-  cursor:pointer;
-  background:var(--accent);
-  color:#000;
-  font-weight:700;
-}
-.inputBar button.gray{
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-  border:1px solid var(--border);
-}
-
-/* ===== GAME ===== */
-.gameWrap{
-  padding:16px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.gameCard{
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:14px;
-}
-.gameCard h3{margin:0 0 8px 0;}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-.gbtn{
-  padding:12px;
-  border:none;
-  border-radius:14px;
-  cursor:pointer;
-  background:rgba(255,255,255,.06);
-  color:var(--text);
-}
-.gbtn:hover{background:rgba(255,255,255,.10);}
-</style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-<div class="app">
-
-  <!-- ===== SIDEBAR ===== -->
-  <div class="sidebar">
+  <!-- TOP BAR -->
+  <header class="topbar">
     <div class="brand">
-      StudyBuddy AI
-      <small>Ultimate Hub (All in One)</small>
+      <img src="icon-192.png" class="logo" alt="logo">
+      <div>
+        <div class="title">StudyBuddy AI</div>
+        <div class="subtitle">Ultimate Hub (All-in-One)</div>
+      </div>
     </div>
 
-    <button class="sidebtn active" onclick="showPage('home')">🏠 Home</button>
-    <button class="sidebtn" onclick="showPage('auth')">🔐 Login / Signup</button>
-    <button class="sidebtn" onclick="showPage('chat')">🤖 AI Chat</button>
-    <button class="sidebtn" onclick="showPage('games')">🎮 Games</button>
-
-    <div class="hr"></div>
-
-    <div class="smallrow">
-      <button onclick="toggleTheme()">🌗 Theme</button>
-      <button onclick="resetAll()">🧹 Reset</button>
+    <div class="top-actions">
+      <button class="btn small" onclick="toggleTheme()">🌙 Theme</button>
+      <button class="btn small" onclick="openAuth()">👤 Login</button>
     </div>
+  </header>
 
-    <div class="footer">
-      Offline app demo (No API).<br>
-      Accounts saved in your browser.
+  <!-- NAV -->
+  <nav class="nav">
+    <button class="navbtn active" onclick="showPage('home')">🏠 Home</button>
+    <button class="navbtn" onclick="showPage('study')">📚 StudyBuddy</button>
+    <button class="navbtn" onclick="showPage('chat')">🤖 ChatGPT Clone</button>
+    <button class="navbtn" onclick="showPage('minecraft')">⛏️ Pro Minecraft</button>
+    <button class="navbtn" onclick="showPage('games')">🎮 Games Hub</button>
+    <button class="navbtn" onclick="showPage('settings')">⚙️ Settings</button>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HOME -->
+    <section id="page-home" class="page show">
+      <h1>Welcome 👋</h1>
+      <p class="muted">
+        This is your <b>StudyBuddy AI + Super ChatGPT Clone + Games Hub + Pro Minecraft</b> in one website.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <h3>📚 StudyBuddy AI</h3>
+          <p>Exam Mode, Coding Mode, Explain Mode, Summarize Mode.</p>
+          <button class="btn" onclick="showPage('study')">Open StudyBuddy</button>
+        </div>
+
+        <div class="card">
+          <h3>🤖 ChatGPT Clone</h3>
+          <p>Smart chatbot with modes + export + reset.</p>
+          <button class="btn" onclick="showPage('chat')">Open Chat</button>
+        </div>
+
+        <div class="card">
+          <h3>⛏️ Pro Minecraft</h3>
+          <p>God Powers, Boss Respawn, Revive, Kill, World Destroy (Safe).</p>
+          <button class="btn" onclick="showPage('minecraft')">Open Minecraft</button>
+        </div>
+
+        <div class="card">
+          <h3>🎮 Infinity Games Hub</h3>
+          <p>Mini games & fun.</p>
+          <button class="btn" onclick="showPage('games')">Open Games</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STUDYBUDDY -->
+    <section id="page-study" class="page">
+      <h2>📚 StudyBuddy AI</h2>
+
+      <div class="modebar">
+        <button class="chip active" onclick="setSBMode('study')">Study Mode</button>
+        <button class="chip" onclick="setSBMode('exam')">Exam Mode</button>
+        <button class="chip" onclick="setSBMode('coding')">Coding Mode</button>
+        <button class="chip" onclick="setSBMode('summarize')">Summarize</button>
+        <button class="chip" onclick="setSBMode('translate')">Translate</button>
+      </div>
+
+      <div class="chatbox">
+        <div id="sbChat" class="chatlog"></div>
+
+        <div class="chatinput">
+          <input id="sbInput" placeholder="Ask StudyBuddy AI..." onkeydown="if(event.key==='Enter'){sbSend()}">
+          <button class="btn" onclick="sbSend()">Send</button>
+        </div>
+
+        <div class="tools">
+          <button class="btn ghost" onclick="sbExport()">Export</button>
+          <button class="btn ghost" onclick="sbReset()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHATGPT CLONE -->
+    <section id="page-chat" class="page">
+      <h2>🤖 Super ChatGPT Clone</h2>
+
+      <div class="modebar">
+        <button class="chip active" onclick="setCGMode('smart')">Smart</button>
+        <button class="chip" onclick="setCGMode('creative')">Creative</button>
+        <button class="chip" onclick="setCGMode('coding')">Coding</button>
+        <button class="chip" onclick="setCGMode('strict')">Strict</button>
+      </div>
+
+      <div class="chatbox">
+        <div id="cgChat" class="chatlog"></div>
+
+        <div class="chatinput">
+          <input id="cgInput" placeholder="Talk to AI..." onkeydown="if(event.key==='Enter'){cgSend()}">
+          <button class="btn" onclick="cgSend()">Send</button>
+        </div>
+
+        <div class="tools">
+          <button class="btn ghost" onclick="cgExport()">Export</button>
+          <button class="btn ghost" onclick="cgReset()">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINECRAFT -->
+    <section id="page-minecraft" class="page">
+      <h2>⛏️ Pro Minecraft Game</h2>
+
+      <div class="cards">
+        <div class="card">
+          <h3>🔥 God Powers</h3>
+          <p>Copy this command in Minecraft (Java 1.20+ recommended).</p>
+          <textarea class="code" readonly id="mcGodCmd"></textarea>
+          <button class="btn" onclick="copyText('mcGodCmd')">Copy</button>
+        </div>
+
+        <div class="card">
+          <h3>💀 Kill Mobs</h3>
+          <textarea class="code" readonly id="mcKillCmd">/kill @e[type=!player,distance=..50]</textarea>
+          <button class="btn" onclick="copyText('mcKillCmd')">Copy</button>
+        </div>
+
+        <div class="card">
+          <h3>❤️ Revive Player</h3>
+          <textarea class="code" readonly id="mcReviveCmd">/gamemode survival @p</textarea>
+          <button class="btn" onclick="copyText('mcReviveCmd')">Copy</button>
+        </div>
+
+        <div class="card">
+          <h3>🌍 Destroy World (SAFE)</h3>
+          <p>This removes blocks around you but keeps players safe.</p>
+          <textarea class="code" readonly id="mcDestroyCmd">/fill ~-15 ~-5 ~-15 ~15 ~10 ~15 air replace</textarea>
+          <button class="btn" onclick="copyText('mcDestroyCmd')">Copy</button>
+        </div>
+
+        <div class="card">
+          <h3>👑 Boss Respawn (Infinite)</h3>
+          <textarea class="code" readonly id="mcBossCmd">/summon minecraft:wither ~ ~1 ~</textarea>
+          <button class="btn" onclick="copyText('mcBossCmd')">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- GAMES -->
+    <section id="page-games" class="page">
+      <h2>🎮 Infinity Games Hub</h2>
+
+      <div class="cards">
+        <div class="card">
+          <h3>🎲 Dice</h3>
+          <p id="diceResult" class="big">🎲</p>
+          <button class="btn" onclick="rollDice()">Roll</button>
+        </div>
+
+        <div class="card">
+          <h3>🪙 Coin Flip</h3>
+          <p id="coinResult" class="big">🪙</p>
+          <button class="btn" onclick="flipCoin()">Flip</button>
+        </div>
+
+        <div class="card">
+          <h3>🔢 Random Number</h3>
+          <p id="randResult" class="big">0</p>
+          <button class="btn" onclick="randomNumber()">Generate</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="page-settings" class="page">
+      <h2>⚙️ Settings</h2>
+
+      <div class="card">
+        <h3>Save & Storage</h3>
+        <button class="btn" onclick="clearAllData()">Clear All Saved Data</button>
+        <p class="muted">This will remove login + chat history.</p>
+      </div>
+
+      <div class="card">
+        <h3>Offline Mode</h3>
+        <p class="muted">This app works offline after first load.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div id="authModal" class="modal">
+    <div class="modalBox">
+      <h2>👤 Account</h2>
+
+      <div class="tabs">
+        <button class="tab active" onclick="authTab('login')">Login</button>
+        <button class="tab" onclick="authTab('signup')">Sign Up</button>
+        <button class="tab" onclick="authTab('guest')">Guest</button>
+      </div>
+
+      <div id="auth-login" class="authPage show">
+        <input id="loginEmail" placeholder="Email">
+        <input id="loginPass" type="password" placeholder="Password">
+        <button class="btn" onclick="doLogin()">Login</button>
+      </div>
+
+      <div id="auth-signup" class="authPage">
+        <input id="signupEmail" placeholder="Email">
+        <input id="signupPass" type="password" placeholder="Password">
+        <button class="btn" onclick="doSignup()">Create Account</button>
+      </div>
+
+      <div id="auth-guest" class="authPage">
+        <p class="muted">Use without login. Nothing will be saved.</p>
+        <button class="btn" onclick="useGuest()">Continue as Guest</button>
+      </div>
+
+      <button class="btn ghost" onclick="closeAuth()">Close</button>
     </div>
   </div>
 
-  <!-- ===== MAIN ===== -->
-  <div class="main">
-
-    <div class="topbar">
-      <div class="title" id="topTitle">🏠 Home</div>
-      <div class="badge" id="userBadge">Guest Mode</div>
-    </div>
-
-    <!-- ===== HOME ===== -->
-    <div class="page active" id="page-home">
-      <div style="padding:16px;line-height:1.6;">
-        <h2 style="margin:0 0 10px 0;">Welcome 👋</h2>
-        <p style="margin:0;color:var(--muted);">
-          This is StudyBuddy AI Ultimate Hub (Single File).
-          <br><br>
-          ✅ AI Chat + Modes<br>
-          ✅ Offline Login/Signup<br>
-          ✅ Guest Mode<br>
-          ✅ Minecraft Mini Game<br>
-        </p>
-      </div>
-    </div>
-
-    <!-- ===== AUTH ===== -->
-    <div class="page" id="page-auth">
-      <div class="authWrap">
-
-        <div class="authCard">
-          <h3>Sign Up (First Time)</h3>
-          <input id="suEmail" placeholder="Email" />
-          <input id="suPass" type="password" placeholder="Password" />
-          <button onclick="signup()">Create Account</button>
-          <div class="msgline" id="suMsg"></div>
-        </div>
-
-        <div class="authCard">
-          <h3>Login (Already Have Account)</h3>
-          <input id="liEmail" placeholder="Email" />
-          <input id="liPass" type="password" placeholder="Password" />
-          <button onclick="login()">Login</button>
-          <button class="secondary" onclick="guest()">Continue as Guest</button>
-          <button class="secondary" style="border-color:rgba(239,68,68,.35);" onclick="logout()">Logout</button>
-          <div class="msgline" id="liMsg"></div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ===== CHAT ===== -->
-    <div class="page" id="page-chat">
-      <div class="chatArea">
-
-        <div class="modeBar">
-          <button class="active" onclick="setMode('chat')">💬 Chat</button>
-          <button onclick="setMode('exam')">📝 Exam</button>
-          <button onclick="setMode('coding')">💻 Coding</button>
-          <button onclick="setMode('math')">➗ Math</button>
-          <button onclick="setMode('islam')">🕌 Islam</button>
-        </div>
-
-        <div class="chatWindow" id="chatWindow"></div>
-
-        <div class="inputBar">
-          <input id="chatInput" placeholder="Type message..." />
-          <button onclick="send()">Send</button>
-          <button class="gray" onclick="exportChat()">Export</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ===== GAMES ===== -->
-    <div class="page" id="page-games">
-      <div class="gameWrap">
-
-        <div class="gameCard">
-          <h3>🟩 Minecraft Mini Game (Text)</h3>
-          <div class="grid">
-            <button class="gbtn" onclick="mcStart()">Start Game</button>
-            <button class="gbtn" onclick="mcMine()">Mine</button>
-            <button class="gbtn" onclick="mcFight()">Fight</button>
-            <button class="gbtn" onclick="mcBoss()">Boss</button>
-          </div>
-          <div style="margin-top:10px;color:var(--muted);" id="mcOut"></div>
-        </div>
-
-        <div class="gameCard">
-          <h3>🎮 Quick Games</h3>
-          <div class="grid">
-            <button class="gbtn" onclick="quickGame('guess')">Number Guess</button>
-            <button class="gbtn" onclick="quickGame('riddle')">Riddle</button>
-            <button class="gbtn" onclick="quickGame('quiz')">Quiz</button>
-            <button class="gbtn" onclick="quickGame('typing')">Typing Tip</button>
-          </div>
-          <div style="margin-top:10px;color:var(--muted);" id="gOut"></div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-/* =========================================================
-   IMPORTANT:
-   ALL FUNCTIONS ARE GLOBAL (window.xxx)
-   THIS FIXES "buttons not working"
-========================================================= */
-
-let currentPage = "home";
-let mode = "chat";
-let chatLog = [];
-
-let currentUser = null; // {email}
-const USERS_KEY = "SB_USERS_V1";
-const SESSION_KEY = "SB_SESSION_V1";
-
-/* ====== PAGE SYSTEM ====== */
-window.showPage = function(page){
-  currentPage = page;
-
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById("page-"+page).classList.add("active");
-
-  document.querySelectorAll(".sidebtn").forEach(b=>b.classList.remove("active"));
-  const map = {
-    home:0, auth:1, chat:2, games:3
-  };
-  document.querySelectorAll(".sidebtn")[map[page]].classList.add("active");
-
-  const titleMap = {
-    home:"🏠 Home",
-    auth:"🔐 Login / Signup",
-    chat:"🤖 AI Chat",
-    games:"🎮 Games"
-  };
-  document.getElementById("topTitle").innerText = titleMap[page] || "StudyBuddy AI";
-}
-
-/* ====== THEME ====== */
-window.toggleTheme = function(){
-  document.body.classList.toggle("light");
-  localStorage.setItem("SB_THEME", document.body.classList.contains("light") ? "light" : "dark");
-}
-
-/* ====== RESET ====== */
-window.resetAll = function(){
-  if(!confirm("Reset everything?")) return;
-  localStorage.clear();
-  location.reload();
-}
-
-/* ====== USERS STORAGE ====== */
-function getUsers(){
-  try{ return JSON.parse(localStorage.getItem(USERS_KEY) || "{}"); }
-  catch{ return {}; }
-}
-function saveUsers(users){
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-function setSession(email){
-  localStorage.setItem(SESSION_KEY, email);
-}
-function getSession(){
-  return localStorage.getItem(SESSION_KEY);
-}
-function clearSession(){
-  localStorage.removeItem(SESSION_KEY);
-}
-
-/* ====== AUTH ====== */
-window.signup = function(){
-  const email = document.getElementById("suEmail").value.trim().toLowerCase();
-  const pass = document.getElementById("suPass").value.trim();
-  const msg = document.getElementById("suMsg");
-
-  msg.style.color = "var(--muted)";
-
-  if(!email.includes
+  <!-- SCRIPT -->
+  <script src="script.js"></script>
+</body>
+</html>
