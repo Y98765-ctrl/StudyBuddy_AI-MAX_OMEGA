@@ -5,398 +5,505 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>StudyBuddy AI - Ultimate Hub</title>
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#0b1225" />
-
 <style>
-  :root{
-    --bg:#0b1225;
-    --panel:#111a33;
-    --panel2:#0f1b3d;
-    --text:#ffffff;
-    --muted:#a9b2c7;
-    --accent:#10a37f;
-    --accent2:#2563eb;
-    --danger:#ef4444;
-    --card:#1f2937;
-    --border:rgba(255,255,255,0.08);
-  }
-  .light{
-    --bg:#f3f4f6;
-    --panel:#ffffff;
-    --panel2:#ffffff;
-    --text:#111827;
-    --muted:#6b7280;
-    --accent:#10a37f;
-    --accent2:#2563eb;
-    --danger:#ef4444;
-    --card:#e5e7eb;
-    --border:rgba(0,0,0,0.08);
-  }
+/* ===== THEME ===== */
+:root{
+  --bg:#0b1225;
+  --card:#111a33;
+  --card2:#1b2a55;
+  --text:#ffffff;
+  --muted:rgba(255,255,255,.7);
+  --accent:#22c55e;
+  --accent2:#2563eb;
+  --danger:#ef4444;
+  --bot:#1f2937;
+  --user:#2563eb;
+  --border:rgba(255,255,255,.12);
+}
+.light{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --card2:#e5e7eb;
+  --text:#000000;
+  --muted:rgba(0,0,0,.6);
+  --accent:#16a34a;
+  --accent2:#2563eb;
+  --danger:#dc2626;
+  --bot:#e5e7eb;
+  --user:#2563eb;
+  --border:rgba(0,0,0,.12);
+}
 
-  *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;}
-  body{background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+}
 
-  /* Layout */
-  .wrap{display:flex;height:100vh;width:100%;}
-  .sidebar{
-    width:270px;
-    background:#202123;
-    color:#fff;
-    display:flex;
-    flex-direction:column;
-    border-right:1px solid #333;
-  }
-  .sidebar .title{
-    padding:14px 14px;
-    font-weight:700;
-    font-size:16px;
-    border-bottom:1px solid #333;
-  }
-  .sidebtn{
-    width:100%;
-    padding:12px 14px;
-    background:none;
-    border:none;
-    color:#fff;
-    text-align:left;
-    cursor:pointer;
-    border-bottom:1px solid rgba(255,255,255,0.04);
-    font-size:14px;
-  }
-  .sidebtn:hover{background:#2a2b2f;}
-  .sidebtn.active{background:#333;}
-  .sidebar .footer{
-    margin-top:auto;
-    padding:12px 14px;
-    font-size:12px;
-    color:#aaa;
-    border-top:1px solid #333;
-  }
+/* ===== APP LAYOUT ===== */
+.app{
+  width:980px;
+  max-width:100%;
+  min-height:100vh;
+  display:flex;
+}
 
-  .main{flex:1;display:flex;flex-direction:column;height:100vh;}
-  .topbar{
-    display:flex;
-    gap:10px;
-    align-items:center;
-    justify-content:space-between;
-    padding:12px 14px;
-    background:#343541;
-    color:#fff;
-  }
-  .topbar .left{display:flex;gap:10px;align-items:center;}
-  .pill{
-    padding:6px 10px;
-    border-radius:999px;
-    background:rgba(255,255,255,0.12);
-    font-size:12px;
-  }
-  .topbar button{
-    border:none;
-    padding:8px 10px;
-    border-radius:10px;
-    cursor:pointer;
-    background:#111827;
-    color:#fff;
-    font-size:13px;
-  }
-  .topbar button:hover{opacity:0.9;}
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:270px;
+  background:linear-gradient(180deg,var(--card),rgba(0,0,0,.15));
+  border-right:1px solid var(--border);
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.brand{
+  font-weight:800;
+  font-size:18px;
+  padding:10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.06);
+}
+.brand small{display:block;font-weight:400;color:var(--muted);margin-top:4px;}
 
-  /* Pages */
-  .page{display:none;flex:1;overflow:auto;padding:14px;background:var(--bg);}
-  .page.active{display:block;}
+.sidebtn{
+  width:100%;
+  padding:11px 12px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  text-align:left;
+  transition:.15s;
+}
+.sidebtn:hover{transform:translateY(-1px);background:rgba(255,255,255,.10);}
+.sidebtn.active{background:rgba(34,197,94,.22);border:1px solid rgba(34,197,94,.35);}
 
-  /* Cards */
-  .card{
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:14px;
-    margin-bottom:12px;
-  }
-  .card h2{font-size:18px;margin-bottom:10px;}
-  .muted{color:var(--muted);font-size:13px;line-height:1.4;}
-  .row{display:flex;gap:10px;flex-wrap:wrap;}
-  .btn{
-    padding:10px 12px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    background:var(--accent2);
-    color:#fff;
-    font-weight:600;
-  }
-  .btn:hover{opacity:0.92;}
-  .btn.green{background:var(--accent);}
-  .btn.red{background:var(--danger);}
-  .btn.gray{background:#374151;}
+.smallrow{
+  display:flex;
+  gap:8px;
+}
+.smallrow button{
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+}
+.smallrow button:hover{background:rgba(255,255,255,.10);}
 
-  input,select,textarea{
-    width:100%;
-    padding:12px;
-    border-radius:12px;
-    border:1px solid var(--border);
-    background:var(--card);
-    color:var(--text);
-    outline:none;
-    margin-top:8px;
-  }
+.hr{height:1px;background:var(--border);margin:6px 0;}
+.footer{
+  margin-top:auto;
+  font-size:12px;
+  color:var(--muted);
+  padding:8px;
+  line-height:1.4;
+}
 
-  /* Chat UI */
-  .chatWindow{
-    height:62vh;
-    overflow:auto;
-    padding:12px;
-    border-radius:14px;
-    background:var(--panel);
-    border:1px solid var(--border);
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  .msg{
-    max-width:80%;
-    padding:10px 12px;
-    border-radius:14px;
-    white-space:pre-wrap;
-    line-height:1.35;
-    font-size:14px;
-  }
-  .msg.user{align-self:flex-end;background:var(--accent);color:#fff;}
-  .msg.bot{align-self:flex-start;background:var(--card);color:var(--text);}
+/* ===== MAIN ===== */
+.main{
+  flex:1;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.topbar{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  padding:12px;
+  border-radius:14px;
+}
+.topbar .title{
+  font-weight:700;
+}
+.badge{
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  background:rgba(37,99,235,.18);
+  border:1px solid rgba(37,99,235,.35);
+}
 
-  .chatInputRow{display:flex;gap:10px;margin-top:10px;}
-  .chatInputRow input{margin-top:0;}
-  .chatInputRow button{
-    width:120px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    background:var(--accent);
-    color:#fff;
-    font-weight:700;
-  }
+/* ===== PAGES ===== */
+.page{
+  display:none;
+  flex:1;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+}
+.page.active{display:flex;flex-direction:column;}
 
-  /* Game list */
-  .gameItem{
-    background:var(--card);
-    padding:12px;
-    border-radius:12px;
-    cursor:pointer;
-    border:1px solid var(--border);
-    margin-bottom:8px;
-  }
-  .gameItem:hover{opacity:0.92;}
+/* ===== LOGIN ===== */
+.authWrap{
+  padding:16px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.authCard{
+  flex:1;
+  min-width:280px;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+}
+.authCard h3{margin:0 0 8px 0;}
+.authCard input{
+  width:100%;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.15);
+  color:var(--text);
+  outline:none;
+  margin:6px 0;
+}
+.authCard button{
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:var(--accent2);
+  color:white;
+  margin-top:8px;
+}
+.authCard button.secondary{
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+.msgline{font-size:13px;margin-top:8px;color:var(--muted);}
 
-  /* Responsive */
-  @media(max-width:860px){
-    .sidebar{width:210px;}
-  }
-  @media(max-width:700px){
-    .wrap{flex-direction:column;}
-    .sidebar{width:100%;flex-direction:row;overflow:auto;}
-    .sidebar .title,.sidebar .footer{display:none;}
-    .sidebtn{border-bottom:none;border-right:1px solid rgba(255,255,255,0.06);white-space:nowrap;}
-  }
+/* ===== CHAT ===== */
+.chatArea{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.modeBar{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  flex-wrap:wrap;
+}
+.modeBar button{
+  padding:10px 12px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+}
+.modeBar button.active{
+  background:rgba(34,197,94,.22);
+  border:1px solid rgba(34,197,94,.35);
+}
+
+.chatWindow{
+  flex:1;
+  overflow:auto;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.bubble{
+  max-width:80%;
+  padding:12px 14px;
+  border-radius:16px;
+  white-space:pre-wrap;
+  line-height:1.35;
+  border:1px solid var(--border);
+}
+.bubble.user{background:rgba(37,99,235,.20);align-self:flex-end;}
+.bubble.bot{background:rgba(255,255,255,.06);align-self:flex-start;}
+
+.inputBar{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  border-top:1px solid var(--border);
+}
+.inputBar input{
+  flex:1;
+  padding:12px 14px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.15);
+  color:var(--text);
+  outline:none;
+}
+.inputBar button{
+  padding:12px 16px;
+  border:none;
+  border-radius:999px;
+  cursor:pointer;
+  background:var(--accent);
+  color:#000;
+  font-weight:700;
+}
+.inputBar button.gray{
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+/* ===== GAME ===== */
+.gameWrap{
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.gameCard{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+}
+.gameCard h3{margin:0 0 8px 0;}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.gbtn{
+  padding:12px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+}
+.gbtn:hover{background:rgba(255,255,255,.10);}
 </style>
 </head>
 
 <body>
-<div class="wrap">
+<div class="app">
 
-  <!-- SIDEBAR -->
+  <!-- ===== SIDEBAR ===== -->
   <div class="sidebar">
-    <div class="title">StudyBuddy AI - Ultimate Hub</div>
+    <div class="brand">
+      StudyBuddy AI
+      <small>Ultimate Hub (All in One)</small>
+    </div>
 
-    <button class="sidebtn active" onclick="showPage('home', this)">🏠 Home</button>
-    <button class="sidebtn" onclick="showPage('auth', this)">🔐 Login</button>
-    <button class="sidebtn" onclick="showPage('studybuddy', this)">🤖 StudyBuddy AI</button>
-    <button class="sidebtn" onclick="showPage('superchat', this)">💬 ChatGPT Clone</button>
-    <button class="sidebtn" onclick="showPage('games', this)">🎮 Games Hub</button>
-    <button class="sidebtn" onclick="showPage('minecraft', this)">⛏️ PRO Minecraft</button>
-    <button class="sidebtn" onclick="showPage('settings', this)">⚙️ Settings</button>
+    <button class="sidebtn active" onclick="showPage('home')">🏠 Home</button>
+    <button class="sidebtn" onclick="showPage('auth')">🔐 Login / Signup</button>
+    <button class="sidebtn" onclick="showPage('chat')">🤖 AI Chat</button>
+    <button class="sidebtn" onclick="showPage('games')">🎮 Games</button>
 
-    <div class="footer">Offline Demo • No API • Works on GitHub Pages</div>
+    <div class="hr"></div>
+
+    <div class="smallrow">
+      <button onclick="toggleTheme()">🌗 Theme</button>
+      <button onclick="resetAll()">🧹 Reset</button>
+    </div>
+
+    <div class="footer">
+      Offline app demo (No API).<br>
+      Accounts saved in your browser.
+    </div>
   </div>
 
-  <!-- MAIN -->
+  <!-- ===== MAIN ===== -->
   <div class="main">
+
     <div class="topbar">
-      <div class="left">
-        <div class="pill" id="topUser">Not logged in</div>
-        <div class="pill" id="topMode">Mode: CHAT</div>
-      </div>
-      <div class="right">
-        <button onclick="toggleTheme()">🌗 Theme</button>
-        <button onclick="hardReset()">🧨 Reset</button>
-      </div>
+      <div class="title" id="topTitle">🏠 Home</div>
+      <div class="badge" id="userBadge">Guest Mode</div>
     </div>
 
-    <!-- HOME -->
-    <div id="page-home" class="page active">
-      <div class="card">
-        <h2>🚀 Welcome</h2>
-        <div class="muted">
-          This is your all-in-one app:
-          <br>✅ StudyBuddy AI
-          <br>✅ Super ChatGPT Clone UI
-          <br>✅ Games Hub
-          <br>✅ PRO Minecraft Text Game
-          <br>✅ Offline Login/Signup (LocalStorage)
-        </div>
-        <br>
-        <div class="row">
-          <button class="btn green" onclick="showPage('studybuddy')">Open StudyBuddy AI</button>
-          <button class="btn" onclick="showPage('superchat')">Open ChatGPT Clone</button>
-          <button class="btn gray" onclick="showPage('minecraft')">Play Minecraft</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>🧠 What your AI can answer</h2>
-        <div class="muted">
-          ✔ Hi / Hello / How are you / Who are you / Who made you<br>
-          ✔ Capitals, famous people, science formulas (basic offline)<br>
-          ✔ Math solver (safe)<br>
-          ✔ Coding helper (offline rules)<br>
-          ✔ Exam mode: strict short answers<br>
-          ✔ Islamic reminders + duas
-        </div>
-      </div>
-    </div>
-
-    <!-- AUTH -->
-    <div id="page-auth" class="page">
-      <div class="card">
-        <h2>🔐 Login / Signup</h2>
-        <div class="muted">
-          This is an OFFLINE account system (saved in your browser).
-          <br>Works on GitHub Pages without Firebase.
-        </div>
-
-        <input id="authEmail" type="email" placeholder="Email (example@gmail.com)">
-        <input id="authPass" type="password" placeholder="Password">
-
-        <div class="row" style="margin-top:10px;">
-          <button class="btn green" onclick="signup()">Sign Up</button>
-          <button class="btn" onclick="login()">Login</button>
-          <button class="btn gray" onclick="continueGuest()">Continue Without Login</button>
-        </div>
-
-        <p id="authMsg" class="muted" style="margin-top:10px;"></p>
-        <div class="row" style="margin-top:10px;">
-          <button class="btn red" onclick="logout()">Logout</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- STUDYBUDDY AI -->
-    <div id="page-studybuddy" class="page">
-      <div class="card">
-        <h2>🤖 StudyBuddy AI</h2>
-
-        <div class="row">
-          <button class="btn gray" onclick="setSBMode('chat')">💬 Chat</button>
-          <button class="btn gray" onclick="setSBMode('math')">➗ Math</button>
-          <button class="btn gray" onclick="setSBMode('quiz')">🧠 Quiz</button>
-          <button class="btn gray" onclick="setSBMode('islam')">🕌 Islam</button>
-          <button class="btn gray" onclick="setSBMode('coding')">💻 Coding</button>
-          <button class="btn gray" onclick="setSBMode('exam')">📝 Exam</button>
-        </div>
-
-        <div class="chatWindow" id="sbChat"></div>
-
-        <div class="chatInputRow">
-          <input id="sbInput" placeholder="Type here..." onkeydown="if(event.key==='Enter')sbSend()">
-          <button onclick="sbSend()">Send</button>
-        </div>
-
-        <div class="row" style="margin-top:10px;">
-          <button class="btn gray" onclick="sbExport()">⬇ Export</button>
-          <button class="btn red" onclick="sbReset()">🧹 Clear</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SUPER CHAT -->
-    <div id="page-superchat" class="page">
-      <div class="card">
-        <h2>💬 Super ChatGPT Clone (Offline)</h2>
-        <div class="muted">This is a clean ChatGPT style chat. Offline rules only.</div>
-        <br>
-
-        <div class="row">
-          <button class="btn green" onclick="newSCChat()">+ New Chat</button>
-          <button class="btn gray" onclick="scExport()">⬇ Export</button>
-          <button class="btn red" onclick="scClear()">🧹 Clear</button>
-        </div>
-
-        <div class="chatWindow" id="scChat"></div>
-
-        <div class="chatInputRow">
-          <input id="scInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')scSend()">
-          <button onclick="scSend()">Send</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- GAMES -->
-    <div id="page-games" class="page">
-      <div class="card">
-        <h2>🎮 Games Hub</h2>
-        <input id="gameSearch" placeholder="Search games..." oninput="filterGames()">
-        <br><br>
-        <div id="gameList"></div>
-      </div>
-    </div>
-
-    <!-- MINECRAFT -->
-    <div id="page-minecraft" class="page">
-      <div class="card">
-        <h2>⛏️ PRO Minecraft Game (Web Edition)</h2>
-        <div class="muted">
-          This is your Minecraft text RPG inside the website.
-          <br>Bosses are infinite, leveling is infinite, and you can use commands.
-        </div>
-        <br>
-
-        <div class="row">
-          <button class="btn green" onclick="mcStartNew()">🆕 New Game</button>
-          <button class="btn" onclick="mcSave()">💾 Save</button>
-          <button class="btn gray" onclick="mcLoad()">📂 Load</button>
-          <button class="btn red" onclick="mcReset()">🧨 Reset</button>
-        </div>
-
-        <div class="chatWindow" id="mcLog"></div>
-
-        <div class="chatInputRow">
-          <input id="mcInput" placeholder="Type: explore / mine / craft / fight / shop / /help" onkeydown="if(event.key==='Enter')mcCommand()">
-          <button onclick="mcCommand()">Run</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- SETTINGS -->
-    <div id="page-settings" class="page">
-      <div class="card">
-        <h2>⚙️ Settings</h2>
-        <div class="muted">
-          This app runs fully offline on GitHub Pages.
+    <!-- ===== HOME ===== -->
+    <div class="page active" id="page-home">
+      <div style="padding:16px;line-height:1.6;">
+        <h2 style="margin:0 0 10px 0;">Welcome 👋</h2>
+        <p style="margin:0;color:var(--muted);">
+          This is StudyBuddy AI Ultimate Hub (Single File).
           <br><br>
-          If buttons ever stop working, it is usually because:
-          <br>✅ JavaScript not loaded
-          <br>✅ function name mismatch
-          <br>✅ you copied code partially
-          <br><br>
-          This file is made so ALL functions exist.
-        </div>
+          ✅ AI Chat + Modes<br>
+          ✅ Offline Login/Signup<br>
+          ✅ Guest Mode<br>
+          ✅ Minecraft Mini Game<br>
+        </p>
       </div>
+    </div>
 
-      <div class="card">
-        <h2>📌 App Name</h2>
-        <div class="muted">
-          Best Name:
-          <br><b>StudyBuddy AI – Ultimate Hub</b>
+    <!-- ===== AUTH ===== -->
+    <div class="page" id="page-auth">
+      <div class="authWrap">
+
+        <div class="authCard">
+          <h3>Sign Up (First Time)</h3>
+          <input id="suEmail" placeholder="Email" />
+          <input id="suPass" type="password" placeholder="Password" />
+          <button onclick="signup()">Create Account</button>
+          <div class="msgline" id="suMsg"></div>
         </div>
-      </
+
+        <div class="authCard">
+          <h3>Login (Already Have Account)</h3>
+          <input id="liEmail" placeholder="Email" />
+          <input id="liPass" type="password" placeholder="Password" />
+          <button onclick="login()">Login</button>
+          <button class="secondary" onclick="guest()">Continue as Guest</button>
+          <button class="secondary" style="border-color:rgba(239,68,68,.35);" onclick="logout()">Logout</button>
+          <div class="msgline" id="liMsg"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== CHAT ===== -->
+    <div class="page" id="page-chat">
+      <div class="chatArea">
+
+        <div class="modeBar">
+          <button class="active" onclick="setMode('chat')">💬 Chat</button>
+          <button onclick="setMode('exam')">📝 Exam</button>
+          <button onclick="setMode('coding')">💻 Coding</button>
+          <button onclick="setMode('math')">➗ Math</button>
+          <button onclick="setMode('islam')">🕌 Islam</button>
+        </div>
+
+        <div class="chatWindow" id="chatWindow"></div>
+
+        <div class="inputBar">
+          <input id="chatInput" placeholder="Type message..." />
+          <button onclick="send()">Send</button>
+          <button class="gray" onclick="exportChat()">Export</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== GAMES ===== -->
+    <div class="page" id="page-games">
+      <div class="gameWrap">
+
+        <div class="gameCard">
+          <h3>🟩 Minecraft Mini Game (Text)</h3>
+          <div class="grid">
+            <button class="gbtn" onclick="mcStart()">Start Game</button>
+            <button class="gbtn" onclick="mcMine()">Mine</button>
+            <button class="gbtn" onclick="mcFight()">Fight</button>
+            <button class="gbtn" onclick="mcBoss()">Boss</button>
+          </div>
+          <div style="margin-top:10px;color:var(--muted);" id="mcOut"></div>
+        </div>
+
+        <div class="gameCard">
+          <h3>🎮 Quick Games</h3>
+          <div class="grid">
+            <button class="gbtn" onclick="quickGame('guess')">Number Guess</button>
+            <button class="gbtn" onclick="quickGame('riddle')">Riddle</button>
+            <button class="gbtn" onclick="quickGame('quiz')">Quiz</button>
+            <button class="gbtn" onclick="quickGame('typing')">Typing Tip</button>
+          </div>
+          <div style="margin-top:10px;color:var(--muted);" id="gOut"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   IMPORTANT:
+   ALL FUNCTIONS ARE GLOBAL (window.xxx)
+   THIS FIXES "buttons not working"
+========================================================= */
+
+let currentPage = "home";
+let mode = "chat";
+let chatLog = [];
+
+let currentUser = null; // {email}
+const USERS_KEY = "SB_USERS_V1";
+const SESSION_KEY = "SB_SESSION_V1";
+
+/* ====== PAGE SYSTEM ====== */
+window.showPage = function(page){
+  currentPage = page;
+
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+page).classList.add("active");
+
+  document.querySelectorAll(".sidebtn").forEach(b=>b.classList.remove("active"));
+  const map = {
+    home:0, auth:1, chat:2, games:3
+  };
+  document.querySelectorAll(".sidebtn")[map[page]].classList.add("active");
+
+  const titleMap = {
+    home:"🏠 Home",
+    auth:"🔐 Login / Signup",
+    chat:"🤖 AI Chat",
+    games:"🎮 Games"
+  };
+  document.getElementById("topTitle").innerText = titleMap[page] || "StudyBuddy AI";
+}
+
+/* ====== THEME ====== */
+window.toggleTheme = function(){
+  document.body.classList.toggle("light");
+  localStorage.setItem("SB_THEME", document.body.classList.contains("light") ? "light" : "dark");
+}
+
+/* ====== RESET ====== */
+window.resetAll = function(){
+  if(!confirm("Reset everything?")) return;
+  localStorage.clear();
+  location.reload();
+}
+
+/* ====== USERS STORAGE ====== */
+function getUsers(){
+  try{ return JSON.parse(localStorage.getItem(USERS_KEY) || "{}"); }
+  catch{ return {}; }
+}
+function saveUsers(users){
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+function setSession(email){
+  localStorage.setItem(SESSION_KEY, email);
+}
+function getSession(){
+  return localStorage.getItem(SESSION_KEY);
+}
+function clearSession(){
+  localStorage.removeItem(SESSION_KEY);
+}
+
+/* ====== AUTH ====== */
+window.signup = function(){
+  const email = document.getElementById("suEmail").value.trim().toLowerCase();
+  const pass = document.getElementById("suPass").value.trim();
+  const msg = document.getElementById("suMsg");
+
+  msg.style.color = "var(--muted)";
+
+  if(!email.includes
