@@ -17,8 +17,6 @@
 </head>
 
 <body>
-
-  <!-- APP WRAPPER -->
   <div class="app">
 
     <!-- HEADER -->
@@ -32,9 +30,9 @@
       </div>
 
       <div class="headerBtns">
-        <button class="btn" id="themeBtn">🌗</button>
-        <button class="btn" id="exportBtn">⬇</button>
-        <button class="btn danger" id="resetBtn">⟲</button>
+        <button class="btn" id="themeBtn" title="Theme">🌗</button>
+        <button class="btn" id="exportBtn" title="Export Chat">⬇</button>
+        <button class="btn danger" id="resetBtn" title="Reset">⟲</button>
       </div>
     </header>
 
@@ -43,8 +41,7 @@
       <div class="card">
         <h2>🔐 Login / Sign Up</h2>
         <p class="muted">
-          This is an offline login system (LocalStorage).  
-          No server required. Works on GitHub Pages.
+          Offline login system (LocalStorage). No server required. Works on GitHub Pages.
         </p>
 
         <div class="form">
@@ -65,7 +62,7 @@
 
     <!-- MAIN APP PAGE -->
     <section id="page-app" class="page">
-      
+
       <!-- TOP NAV -->
       <nav class="tabs">
         <button class="tab active" data-mode="chat">💬 Chat</button>
@@ -92,7 +89,6 @@
       </div>
 
     </section>
-
   </div>
 
   <script src="script.js"></script>
