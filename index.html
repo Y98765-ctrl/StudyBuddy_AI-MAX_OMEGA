@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StudyBuddy AI - MAX OMEGA</title>
+
+<meta name="theme-color" content="#000814">
+<link rel="manifest" href="manifest.json">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial}
@@ -25,7 +28,7 @@ header{
 padding:16px;
 text-align:center;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(8px);
+backdrop-filter:blur(10px);
 z-index:1;
 font-weight:bold;
 letter-spacing:2px;
@@ -87,76 +90,22 @@ cursor:pointer;
 
 <body>
 
-<canvas id="bg"></canvas>
-<header>OFFLINE GOD AI</header>
+<header>StudyBuddy AI - MAX OMEGA</header>
 <div id="chat"></div>
 
 <div id="inputArea">
 <input id="input" placeholder="Ask anything...">
 <button onclick="send()">Send</button>
-<button onclick="startVoice()">🎤</button>
 </div>
 
 <script>
 
-/* =========================
-   NEURAL BACKGROUND
-========================= */
-const canvas=document.getElementById("bg");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let particles=[];
-for(let i=0;i<100;i++){
-particles.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-dx:(Math.random()-0.5)*0.6,
-dy:(Math.random()-0.5)*0.6
-});
-}
-
-function animate(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-particles.forEach(p=>{
-p.x+=p.dx;
-p.y+=p.dy;
-if(p.x<0||p.x>canvas.width)p.dx*=-1;
-if(p.y<0||p.y>canvas.height)p.dy*=-1;
-ctx.beginPath();
-ctx.arc(p.x,p.y,2,0,Math.PI*2);
-ctx.fillStyle="#00b4d8";
-ctx.fill();
-});
-
-for(let i=0;i<particles.length;i++){
-for(let j=i+1;j<particles.length;j++){
-let dx=particles[i].x-particles[j].x;
-let dy=particles[i].y-particles[j].y;
-let dist=Math.sqrt(dx*dx+dy*dy);
-if(dist<110){
-ctx.strokeStyle="rgba(0,180,216,"+(1-dist/110)+")";
-ctx.lineWidth=0.4;
-ctx.beginPath();
-ctx.moveTo(particles[i].x,particles[i].y);
-ctx.lineTo(particles[j].x,particles[j].y);
-ctx.stroke();
-}
-}
-}
-requestAnimationFrame(animate);
-}
-animate();
-
-/* =========================
-   MEMORY ENGINE
-========================= */
+/* ======================
+   MEMORY SYSTEM
+====================== */
 let memory={
 history:[],
-lastTopic:null,
-mood:"neutral"
+name:null
 };
 
 function remember(key,value){
@@ -166,45 +115,40 @@ function recall(key){
 return localStorage.getItem(key);
 }
 
-/* =========================
+/* ======================
    KNOWLEDGE DATABASE
-========================= */
+====================== */
 const KNOWLEDGE=[
 {
 topic:"life",
-keywords:["meaning","purpose","why are we here","free will","consciousness"],
+keywords:["meaning","purpose","free will","consciousness"],
 response:"Life has no single universal meaning. Humans create purpose through growth, relationships, learning, and contribution."
-},
-{
-topic:"psychology",
-keywords:["anxiety","confidence","jealous","overthinking","lonely"],
-response:"Psychological states are influenced by thoughts, biology, and environment. Self-awareness and consistent action improve mental strength."
 },
 {
 topic:"science",
 keywords:["universe","big bang","black hole","gravity","evolution"],
-response:"The universe began 13.8 billion years ago. Science explains natural phenomena through observation and experimentation."
+response:"The universe began around 13.8 billion years ago with the Big Bang."
+},
+{
+topic:"psychology",
+keywords:["anxiety","confidence","overthinking","lonely"],
+response:"Mental strength improves with self-awareness, discipline, and positive habits."
 },
 {
 topic:"technology",
-keywords:["ai","algorithm","internet","blockchain","coding"],
-response:"Technology solves problems using logic and systems. Artificial intelligence simulates reasoning using algorithms."
-},
-{
-topic:"money",
-keywords:["money","invest","financial","income","business"],
-response:"Wealth is built by valuable skills, disciplined saving, and long-term investing."
+keywords:["ai","algorithm","internet","coding"],
+response:"Artificial Intelligence simulates reasoning using algorithms and data."
 },
 {
 topic:"study",
-keywords:["study","exam","focus","learn","grades"],
-response:"Best learning method: active recall, spaced repetition, practice testing."
+keywords:["study","exam","focus","learn"],
+response:"Best method: Active recall, spaced repetition, and practice testing."
 }
 ];
 
-/* =========================
-   INTENT DETECTION ENGINE
-========================= */
+/* ======================
+   INTENT DETECTION
+====================== */
 function detectIntent(input){
 let scores={};
 KNOWLEDGE.forEach(k=>{
@@ -213,20 +157,20 @@ k.keywords.forEach(word=>{
 if(input.includes(word)) scores[k.topic]++;
 });
 });
-let bestTopic=null;
-let highest=0;
-for(let topic in scores){
-if(scores[topic]>highest){
-highest=scores[topic];
-bestTopic=topic;
+let best=null;
+let high=0;
+for(let t in scores){
+if(scores[t]>high){
+high=scores[t];
+best=t;
 }
 }
-return highest>0?bestTopic:null;
+return high>0?best:null;
 }
 
-/* =========================
-   SAFE MATH PARSER
-========================= */
+/* ======================
+   SAFE MATH
+====================== */
 function safeMath(input){
 if(!/^[0-9+\-*/(). ]+$/.test(input)) return null;
 try{
@@ -234,16 +178,9 @@ return Function('"use strict";return ('+input+')')();
 }catch{return null;}
 }
 
-/* =========================
-   QUIZ GENERATOR
-========================= */
-function generateQuiz(){
-return "Quiz: What is the capital of France?\nA) Berlin\nB) Paris\nC) Rome\nD) Madrid\nAnswer: B) Paris";
-}
-
-/* =========================
-   GOD BRAIN
-========================= */
+/* ======================
+   BRAIN
+====================== */
 function brain(input){
 
 memory.history.push(input);
@@ -259,23 +196,20 @@ let name=recall("username");
 return name? "Your name is "+name+"." : "You haven't told me yet.";
 }
 
-let mathResult=safeMath(input);
-if(mathResult!==null) return "Result: "+mathResult;
-
-if(input.includes("quiz")) return generateQuiz();
+let math=safeMath(input);
+if(math!==null) return "Result: "+math;
 
 let topic=detectIntent(input);
 if(topic){
-memory.lastTopic=topic;
 return KNOWLEDGE.find(k=>k.topic===topic).response;
 }
 
-return "I understand many topics: life, psychology, science, technology, money, study. Ask deeper.";
+return "I can discuss life, science, psychology, study methods, technology, and calculate math.";
 }
 
-/* =========================
+/* ======================
    CHAT SYSTEM
-========================= */
+====================== */
 const chat=document.getElementById("chat");
 
 function add(text,type){
@@ -300,25 +234,14 @@ document.getElementById("input")
 if(e.key==="Enter")send();
 });
 
-/* =========================
-   VOICE SYSTEM
-========================= */
-function startVoice(){
-if(!('webkitSpeechRecognition'in window)) return;
-let rec=new webkitSpeechRecognition();
-rec.lang="en-US";
-rec.start();
-rec.onresult=function(e){
-document.getElementById("input").value=e.results[0][0].transcript;
-send();
-};
-}
-
-function speak(text){
-let utter=new SpeechSynthesisUtterance(text);
-speechSynthesis.speak(utter);
+/* ======================
+   SERVICE WORKER
+====================== */
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
 }
 
 </script>
+
 </body>
 </html>
