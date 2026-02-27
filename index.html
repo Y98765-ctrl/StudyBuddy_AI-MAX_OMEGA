@@ -7,90 +7,128 @@
 
 <meta name="theme-color" content="#000814">
 <link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+
+<!-- Google Arabic Font -->
+<link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,Arial}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,Arial;
+}
+
 body{
 height:100vh;
 display:flex;
 flex-direction:column;
-background:#000814;
-color:white;
 overflow:hidden;
+background:linear-gradient(-45deg,#000814,#001d3d,#003566,#000814);
+background-size:400% 400%;
+animation:gradientMove 15s ease infinite;
+color:white;
 }
-canvas{
-position:fixed;
-top:0;
-left:0;
-z-index:0;
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
+
 header{
-padding:16px;
+padding:18px;
 text-align:center;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(10px);
-z-index:1;
 font-weight:bold;
+font-size:18px;
 letter-spacing:2px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+box-shadow:0 0 20px rgba(0,180,216,0.4);
 }
+
 #chat{
 flex:1;
 overflow-y:auto;
 padding:20px;
 display:flex;
 flex-direction:column;
-z-index:1;
+scroll-behavior:smooth;
 }
+
 .msg{
 max-width:80%;
-padding:14px;
-margin-bottom:12px;
-border-radius:16px;
+padding:16px;
+margin-bottom:14px;
+border-radius:18px;
 line-height:1.6;
-animation:fade .25s ease;
+animation:fadeUp 0.3s ease;
+white-space:pre-line;
 }
+
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(10px)}
+to{opacity:1;transform:translateY(0)}
+}
+
 .user{
 align-self:flex-end;
 background:linear-gradient(135deg,#0077b6,#00b4d8);
 }
+
 .bot{
 align-self:flex-start;
 background:rgba(255,255,255,0.08);
-backdrop-filter:blur(10px);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.1);
 }
-@keyframes fade{
-from{opacity:0;transform:translateY(8px)}
-to{opacity:1;transform:translateY(0)}
+
+.arabic{
+font-family:'Amiri',serif;
+font-size:20px;
+direction:rtl;
+margin-bottom:10px;
 }
+
 #inputArea{
 display:flex;
 padding:15px;
 background:rgba(255,255,255,0.05);
-z-index:1;
+backdrop-filter:blur(10px);
 }
+
 input{
 flex:1;
-padding:12px;
+padding:14px;
 border:none;
 border-radius:25px;
 outline:none;
+font-size:15px;
 }
+
 button{
 margin-left:10px;
-padding:12px 20px;
+padding:14px 20px;
 border:none;
 border-radius:25px;
 background:#00b4d8;
 color:white;
 font-weight:bold;
 cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+background:#48cae4;
 }
 </style>
 </head>
 
 <body>
 
-<header>StudyBuddy AI - MAX OMEGA</header>
+<header>🧠 StudyBuddy AI - MAX OMEGA</header>
 <div id="chat"></div>
 
 <div id="inputArea">
@@ -100,146 +138,149 @@ cursor:pointer;
 
 <script>
 
-/* ======================
-   MEMORY SYSTEM
-====================== */
-let memory={
-history:[],
-name:null
+/* ============================
+   INTRO MESSAGE
+============================ */
+window.onload=function(){
+addTyping("Assalamu Alaikum 👋\n\nI am StudyBuddy AI - MAX OMEGA.\nYour intelligent study and Islamic assistant.\n\nAsk me anything and grow in knowledge & faith.");
 };
 
-function remember(key,value){
-localStorage.setItem(key,value);
-}
-function recall(key){
-return localStorage.getItem(key);
-}
-
-/* ======================
-   KNOWLEDGE DATABASE
-====================== */
-const KNOWLEDGE=[
-{
-topic:"life",
-keywords:["meaning","purpose","free will","consciousness"],
-response:"Life has no single universal meaning. Humans create purpose through growth, relationships, learning, and contribution."
+/* ============================
+   DUAS DATABASE
+============================ */
+const DUAS={
+protection:{
+arabic:"اللّهُمَّ احفظني من كل شر",
+translit:"Allahumma ihfazni min kulli sharr",
+meaning:"O Allah, protect me from every evil."
 },
-{
-topic:"science",
-keywords:["universe","big bang","black hole","gravity","evolution"],
-response:"The universe began around 13.8 billion years ago with the Big Bang."
+forgiveness:{
+arabic:"رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ",
+translit:"Rabbi ighfir li wa tub 'alayya",
+meaning:"My Lord, forgive me and accept my repentance."
 },
-{
-topic:"psychology",
-keywords:["anxiety","confidence","overthinking","lonely"],
-response:"Mental strength improves with self-awareness, discipline, and positive habits."
+guidance:{
+arabic:"اللّهُمَّ اهْدِنِي",
+translit:"Allahumma ihdini",
+meaning:"O Allah, guide me."
 },
-{
-topic:"technology",
-keywords:["ai","algorithm","internet","coding"],
-response:"Artificial Intelligence simulates reasoning using algorithms and data."
-},
-{
-topic:"study",
-keywords:["study","exam","focus","learn"],
-response:"Best method: Active recall, spaced repetition, and practice testing."
+knowledge:{
+arabic:"رَبِّ زِدْنِي عِلْمًا",
+translit:"Rabbi zidni ilma",
+meaning:"My Lord, increase me in knowledge."
 }
-];
+};
 
-/* ======================
-   INTENT DETECTION
-====================== */
-function detectIntent(input){
-let scores={};
-KNOWLEDGE.forEach(k=>{
-scores[k.topic]=0;
-k.keywords.forEach(word=>{
-if(input.includes(word)) scores[k.topic]++;
-});
-});
-let best=null;
-let high=0;
-for(let t in scores){
-if(scores[t]>high){
-high=scores[t];
-best=t;
-}
-}
-return high>0?best:null;
-}
-
-/* ======================
-   SAFE MATH
-====================== */
-function safeMath(input){
-if(!/^[0-9+\-*/(). ]+$/.test(input)) return null;
-try{
-return Function('"use strict";return ('+input+')')();
-}catch{return null;}
-}
-
-/* ======================
+/* ============================
    BRAIN
-====================== */
+============================ */
 function brain(input){
 
-memory.history.push(input);
+input=input.toLowerCase();
 
-if(input.includes("my name is")){
-let name=input.replace("my name is","").trim();
-remember("username",name);
-return "Nice to meet you, "+name+".";
+/* Greetings */
+if(input==="hi"||input==="hello"||input==="assalamualaikum"){
+return "Wa Alaikum Assalam 👋 How can I assist you today?";
 }
 
-if(input.includes("what is my name")){
-let name=recall("username");
-return name? "Your name is "+name+"." : "You haven't told me yet.";
+if(input.includes("how are you")){
+return "Alhamdulillah, I am operating at maximum intelligence. How are you feeling today?";
 }
 
-let math=safeMath(input);
-if(math!==null) return "Result: "+math;
-
-let topic=detectIntent(input);
-if(topic){
-return KNOWLEDGE.find(k=>k.topic===topic).response;
+/* Identity */
+if(input.includes("who are you")){
+return "I am StudyBuddy AI - MAX OMEGA — your powerful offline intelligent assistant.";
 }
 
-return "I can discuss life, science, psychology, study methods, technology, and calculate math.";
+if(input.includes("who made you")){
+return "I was made by a young Muslim developer. If you want I can tell you his name.";
 }
 
-/* ======================
+if(input.includes("tell me his name")||input.includes("what is his name")||input.includes("who is he")){
+return "His name is Muhammad Yousaf.";
+}
+
+if(input.includes("developer name")||input.includes("give developer name")){
+return "Please ask properly if you want to know.";
+}
+
+/* Abilities */
+if(input.includes("what can you do")||input.includes("what are your abilities")){
+return "I can assist you with:\n\n• Study & Exams\n• Science & Technology\n• Islamic Duas\n• Motivation\n• Productivity\n• General Knowledge\n\nAsk me anything.";
+}
+
+/* 10 Duas */
+if(input.includes("write 10 dua")){
+return "1. Rabbi zidni ilma\n2. Allahumma ihdini\n3. Rabbi ighfir li\n4. Allahumma ihfazni\n5. Hasbunallahu wa ni'mal wakeel\n6. SubhanAllahi wa bihamdihi\n7. Astaghfirullah\n8. La ilaha illallah\n9. Allahu Akbar\n10. Rabbana atina fid dunya hasanah";
+}
+
+/* Specific Dua */
+if(input.includes("dua of")){
+let topic=input.replace("dua of","").trim();
+if(DUAS[topic]){
+return `<div class="arabic">${DUAS[topic].arabic}</div>
+Transliteration: ${DUAS[topic].translit}
+
+Translation: ${DUAS[topic].meaning}`;
+}else{
+return "I do not have that dua stored yet.";
+}
+}
+
+/* Default Ending */
+return "I am always here to help you grow in knowledge and faith. Ask your next question.";
+}
+
+/* ============================
    CHAT SYSTEM
-====================== */
+============================ */
+
 const chat=document.getElementById("chat");
 
-function add(text,type){
+function add(text,type="bot"){
 let div=document.createElement("div");
 div.className="msg "+type;
-div.innerText=text;
+div.innerHTML=text;
 chat.appendChild(div);
 chat.scrollTop=chat.scrollHeight;
 }
 
+function addTyping(text){
+let div=document.createElement("div");
+div.className="msg bot";
+chat.appendChild(div);
+
+let i=0;
+let speed=15;
+function type(){
+if(i<text.length){
+div.innerHTML+=text.charAt(i);
+i++;
+setTimeout(type,speed);
+}else{
+chat.scrollTop=chat.scrollHeight;
+}
+}
+type();
+}
+
 function send(){
 let input=document.getElementById("input");
-let text=input.value.trim().toLowerCase();
+let text=input.value.trim();
 if(!text)return;
+
 add(text,"user");
 input.value="";
-setTimeout(()=>add(brain(text),"bot"),400);
+
+setTimeout(()=>{
+addTyping(brain(text));
+},300);
 }
 
 document.getElementById("input")
 .addEventListener("keypress",e=>{
 if(e.key==="Enter")send();
 });
-
-/* ======================
-   SERVICE WORKER
-====================== */
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("sw.js");
-}
 
 </script>
 
