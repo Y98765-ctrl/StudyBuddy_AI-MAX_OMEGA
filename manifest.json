@@ -1,10 +1,10 @@
 {
-  "id": "/StudyBuddy_AI-MAX_OMEGA/",
+  "id": "/StudyBuddy_AI-Ultimate_Hub/",
   "name": "StudyBuddy AI - MAX OMEGA",
   "short_name": "MAX OMEGA",
   "description": "StudyBuddy AI - MAX OMEGA is a powerful offline intelligent assistant for learning, science, math, psychology, and productivity.",
-  "start_url": "/StudyBuddy_AI-MAX_OMEGA/index.html",
-  "scope": "/StudyBuddy_AI-MAX_OMEGA_Hub/",
+  "start_url": "/StudyBuddy_AI-Ultimate_Hub/index.html",
+  "scope": "/StudyBuddy_AI-Ultimate_Hub/",
   "display": "standalone",
   "background_color": "#000814",
   "theme_color": "#000814",
