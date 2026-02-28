@@ -1,13 +1,10 @@
-function toggleCalculator(){
-    document.getElementById("calculator").classList.toggle("hidden");
-}
-
-function calculate(){
-    let input = document.getElementById("calcInput").value;
-    try{
-        let result = eval(input);
-        addMessage("Calculator", result);
-    } catch {
-        addMessage("Calculator", "Invalid expression.");
+function solveMath(input){
+    if(/^[0-9+\-*/(). ]+$/.test(input)){
+        try{
+            return "The answer is "+eval(input);
+        }catch{
+            return null;
+        }
     }
+    return null;
 }
