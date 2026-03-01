@@ -29,15 +29,12 @@ function adminPanel(){
     return `
 ⚙️ ADMIN PANEL ⚙️
 
-Available Commands:
-
 admin: typing box
 admin: change title YourTitle
 admin: set mood calm
 admin: add xp 500
 admin: system color gold
 admin: reset ui
-
     `;
 }
 
@@ -57,16 +54,11 @@ function executeAdmin(input){
 
         let command = input.replace("admin:","").trim().toLowerCase();
 
-        /* ==========================
-           BROADCAST TYPING BOX
-        ========================== */
-
         if(command === "typing box"){
             createBroadcastBox();
             return "📡 Broadcast Control Activated.";
         }
 
-        /* Change Title */
         if(command.startsWith("change title")){
             let newTitle = input.replace("admin: change title","").trim();
             if(newTitle){
@@ -75,14 +67,12 @@ function executeAdmin(input){
             }
         }
 
-        /* Set Mood */
         if(command.startsWith("set mood")){
             let mood = input.replace("admin: set mood","").trim();
             aiState.mood = mood;
             return "Mood updated to " + aiState.mood;
         }
 
-        /* Add XP */
         if(command.startsWith("add xp")){
             let value = parseInt(input.replace("admin: add xp","").trim());
             if(!isNaN(value)){
@@ -91,7 +81,6 @@ function executeAdmin(input){
             }
         }
 
-        /* Change Glow Color */
         if(command.startsWith("system color")){
             let color = input.replace("admin: system color","").trim();
             document.querySelector(".chat-container").style.boxShadow =
@@ -99,7 +88,6 @@ function executeAdmin(input){
             return "System color changed.";
         }
 
-        /* Reset UI */
         if(command === "reset ui"){
             document.querySelector(".chat-container").style.boxShadow =
                 "0 0 20px cyan";
@@ -113,7 +101,7 @@ function executeAdmin(input){
 }
 
 /* ===============================
-   BROADCAST SYSTEM
+   BROADCAST SYSTEM (FIXED)
 ================================ */
 
 let broadcastBox = null;
@@ -122,35 +110,51 @@ function createBroadcastBox(){
 
     if(broadcastBox) return;
 
+    const container = document.querySelector(".chat-container");
+
     broadcastBox = document.createElement("div");
-    broadcastBox.style.position = "fixed";
-    broadcastBox.style.bottom = "20px";
-    broadcastBox.style.right = "20px";
-    broadcastBox.style.background = "black";
-    broadcastBox.style.padding = "15px";
+    broadcastBox.style.marginTop = "15px";
+    broadcastBox.style.padding = "10px";
+    broadcastBox.style.background = "#111";
     broadcastBox.style.border = "2px solid gold";
     broadcastBox.style.borderRadius = "10px";
-    broadcastBox.style.zIndex = "9999";
-    broadcastBox.style.boxShadow = "0 0 15px gold";
+    broadcastBox.style.display = "flex";
+    broadcastBox.style.justifyContent = "center";
+    broadcastBox.style.gap = "10px";
 
     let input = document.createElement("input");
     input.type = "text";
     input.placeholder = "Type broadcast message...";
     input.style.padding = "8px";
-    input.style.width = "220px";
+    input.style.width = "250px";
     input.style.borderRadius = "6px";
     input.style.border = "none";
-    input.style.outline = "none";
+
+    let btn = document.createElement("button");
+    btn.innerText = "Broadcast";
+    btn.style.padding = "8px 12px";
+    btn.style.borderRadius = "6px";
+    btn.style.border = "none";
+    btn.style.background = "gold";
+    btn.style.cursor = "pointer";
 
     broadcastBox.appendChild(input);
-    document.body.appendChild(broadcastBox);
+    broadcastBox.appendChild(btn);
+    container.appendChild(broadcastBox);
 
     input.focus();
 
-    input.addEventListener("keypress", function(e){
-        if(e.key === "Enter" && input.value.trim() !== ""){
+    function sendBroadcast(){
+        if(input.value.trim() !== ""){
             showBroadcast(input.value.trim());
             input.value = "";
+        }
+    }
+
+    btn.addEventListener("click", sendBroadcast);
+    input.addEventListener("keypress", function(e){
+        if(e.key === "Enter"){
+            sendBroadcast();
         }
     });
 }
@@ -161,7 +165,7 @@ function showBroadcast(text){
     banner.innerText = text;
 
     banner.style.position = "fixed";
-    banner.style.top = "20px";
+    banner.style.top = "30px";
     banner.style.left = "50%";
     banner.style.transform = "translateX(-50%)";
     banner.style.background = "gold";
@@ -170,21 +174,12 @@ function showBroadcast(text){
     banner.style.borderRadius = "30px";
     banner.style.fontWeight = "bold";
     banner.style.boxShadow = "0 0 25px gold";
-    banner.style.zIndex = "9998";
-    banner.style.opacity = "0";
-    banner.style.transition = "opacity 0.4s ease";
+    banner.style.zIndex = "9999";
 
     document.body.appendChild(banner);
 
     setTimeout(()=>{
-        banner.style.opacity = "1";
-    },50);
-
-    setTimeout(()=>{
-        banner.style.opacity = "0";
-        setTimeout(()=>{
-            banner.remove();
-        },400);
+        banner.remove();
     },5000);
 }
 
@@ -206,14 +201,13 @@ function getResponse(input){
     let lower = input.toLowerCase();
 
     if(lower.includes("hello") || lower.includes("hi")){
-        return "Hello 👋 How can I assist you?";
+        return "Hello 👋";
     }
 
     if(lower === "who are you"){
         return "I am AURA | Mood: " + aiState.mood + " | XP: " + aiState.xp;
     }
 
-    /* Calculator */
     if(input.match(/^[0-9+\-*/(). ]+$/)){
         try{
             return "Result: " + eval(input);
