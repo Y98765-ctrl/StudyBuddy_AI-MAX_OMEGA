@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>AURA - Master System</title>
+<title>AURA - Master Architect System</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -28,13 +28,12 @@
 <script src="brain.js"></script>
 
 <script>
-/* Send system */
 document.getElementById("sendBtn").addEventListener("click", sendMessage);
 document.getElementById("userInput").addEventListener("keypress", function(e){
     if(e.key === "Enter") sendMessage();
 });
 
-/* Background animation */
+/* 3D Star Background */
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -46,7 +45,6 @@ resize();
 window.addEventListener("resize", resize);
 
 let stars = [];
-
 for(let i=0;i<200;i++){
     stars.push({
         x:Math.random()*canvas.width - canvas.width/2,
@@ -77,6 +75,6 @@ function animate(){
 }
 animate();
 </script>
-  
+
 </body>
 </html>
