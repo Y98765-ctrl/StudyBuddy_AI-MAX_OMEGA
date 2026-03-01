@@ -1,44 +1,166 @@
-body{
-    background: linear-gradient(135deg,#000000,#0f2027,#203a43);
-    font-family: Arial;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    overflow:hidden;
+/* ===============================
+   GLOBAL RESET
+================================ */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
+body{
+    margin:0;
+    overflow:hidden;
+    font-family:Arial, Helvetica, sans-serif;
+    color:white;
+    background:black;
+}
+
+/* ===============================
+   3D BACKGROUND CANVAS
+================================ */
+
+#bgCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+/* ===============================
+   CHAT CONTAINER
+================================ */
+
 .chat-container{
+    position:relative;
+    z-index:1;
     width:650px;
     background:rgba(0,0,0,0.75);
     padding:20px;
     border-radius:15px;
     box-shadow:0 0 25px cyan;
+    backdrop-filter:blur(6px);
+    margin:auto;
+    top:50%;
+    transform:translateY(-50%);
 }
+
+/* ===============================
+   HEADER
+================================ */
+
+.chat-container h1{
+    text-align:center;
+    margin-bottom:15px;
+    color:cyan;
+    text-shadow:0 0 10px cyan;
+}
+
+/* ===============================
+   CHAT AREA
+================================ */
 
 #chat{
     height:320px;
     overflow-y:auto;
-    margin-bottom:10px;
+    margin-bottom:12px;
+    padding-right:5px;
+    scrollbar-width:thin;
 }
+
+/* Custom Scrollbar (Chrome) */
+#chat::-webkit-scrollbar{
+    width:6px;
+}
+#chat::-webkit-scrollbar-thumb{
+    background:cyan;
+    border-radius:10px;
+}
+
+/* ===============================
+   MESSAGE STYLES
+================================ */
 
 .message{
     margin:8px 0;
-    padding:8px;
-    border-radius:8px;
-    animation:fadeIn 0.4s ease-in-out;
+    padding:10px;
+    border-radius:10px;
+    max-width:85%;
+    word-wrap:break-word;
+    animation:fadeIn 0.3s ease-in-out;
 }
 
-.user{ background:#16a085; text-align:right; }
-.ai{ background:#2c3e50; }
+.user{
+    background:#16a085;
+    align-self:flex-end;
+    margin-left:auto;
+    text-align:right;
+}
 
+.ai{
+    background:#2c3e50;
+    margin-right:auto;
+}
+
+/* Smooth appearance */
 @keyframes fadeIn{
-    from{opacity:0; transform:translateY(8px);}
-    to{opacity:1; transform:translateY(0);}
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
-/* CREATOR GOD MODE SCENE */
+/* ===============================
+   INPUT AREA
+================================ */
+
+.input-area{
+    display:flex;
+    justify-content:space-between;
+}
+
+#userInput{
+    width:75%;
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+    font-size:14px;
+}
+
+#userInput:focus{
+    box-shadow:0 0 10px cyan;
+}
+
+#sendBtn{
+    width:22%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:cyan;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+#sendBtn:hover{
+    background:#00ffff;
+    box-shadow:0 0 10px cyan;
+}
+
+#sendBtn:active{
+    transform:scale(0.95);
+}
+
+/* ===============================
+   ARCHITECT / CREATOR OVERLAY
+================================ */
 
 .architect-overlay{
     position:fixed;
@@ -52,7 +174,7 @@ body{
     align-items:center;
     flex-direction:column;
     z-index:9999;
-    animation:fadeIn 1s ease-in-out;
+    animation:fadeOverlay 1s ease-in-out;
 }
 
 .architect-title{
@@ -66,9 +188,22 @@ body{
     margin-top:20px;
     font-size:18px;
     color:cyan;
+    text-align:center;
+}
+
+/* Overlay animation */
+@keyframes fadeOverlay{
+    from{opacity:0;}
+    to{opacity:1;}
 }
 
 @keyframes pulse{
-    from{transform:scale(1); opacity:0.8;}
-    to{transform:scale(1.1); opacity:1;}
+    from{
+        transform:scale(1);
+        opacity:0.8;
+    }
+    to{
+        transform:scale(1.1);
+        opacity:1;
+    }
 }
