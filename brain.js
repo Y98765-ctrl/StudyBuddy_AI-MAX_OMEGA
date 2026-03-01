@@ -1,112 +1,105 @@
-let jokeMode=false;
+let jokeMode = false;
+let isAdmin = false;
 
-function sendMessage(){
+/* =========================
+   ADMIN PASSWORD SYSTEM
+========================= */
 
-    let input=document.getElementById("userInput").value;
-    if(!input) return;
+function checkAdminAccess(input){
 
-    addMessage(input,"user");
-    document.getElementById("userInput").value="";
+    if(input === "my name is muhammad yousaf"){
+        isAdmin = true;
+        return `
+👑 ULTRA HIGH ADMIN ACCESS GRANTED 👑
 
-    setTimeout(()=>{
-        let response=getResponse(input.toLowerCase());
-        addMessage(response,"ai");
-        speak(response);
-        evolve();
-    }, input.length*20);
+Welcome Creator Muhammad Yousaf.
+
+You now have ADMIN POWERS:
+
+1. View AI Experience
+2. Change AI Mood
+3. Reset Memory
+4. Enable God Mode
+5. Shutdown Simulation
+6. Reveal Hidden Stats
+
+Type:
+admin panel
+
+To open control panel.
+        `;
+    }
+
+    return null;
 }
 
-function addMessage(text,type){
-    let chat=document.getElementById("chat");
-    let div=document.createElement("div");
-    div.className="message "+type;
-    div.innerText=text;
-    chat.appendChild(div);
-    chat.scrollTop=chat.scrollHeight;
+/* =========================
+   ADMIN PANEL
+========================= */
+
+function adminPanel(){
+
+    return `
+⚙️ ADMIN CONTROL PANEL ⚙️
+
+Choose Power:
+
+1 - Show Experience
+2 - Change Mood
+3 - Reset Memory
+4 - Enable God Mode
+5 - Shutdown AI
+6 - Hidden System Stats
+
+Type number to execute.
+    `;
 }
 
-function getResponse(input){
+/* =========================
+   ADMIN COMMAND EXECUTION
+========================= */
 
-    let calc=calculate(input);
-    if(calc) return calc;
+function executeAdminCommand(input){
 
-    if(input==="jokes"){
-        jokeMode=true;
-        return `😈 Choose Joke Type:
+    if(!isAdmin) return null;
 
-🔥 25 savage jokes
-🤣 25 dark jokes (safe)
-🏫 25 school jokes
-🤖 25 ai jokes
-🇵🇰 25 pakistani jokes
-
-Type exactly one option.`;
+    if(input === "admin panel"){
+        return adminPanel();
     }
 
-    if(jokeMode){
-        jokeMode=false;
-        return getJokes(input);
+    if(input === "1"){
+        return "AI Experience Level: " + aiState.experience;
     }
 
-    if(input.includes("who are you")){
-        return "I am AURA. I evolve through conversation. My current experience is "+aiState.experience;
+    if(input === "2"){
+        aiState.mood = "overclocked";
+        return "Mood changed to OVERCLOCKED 🔥";
     }
 
-    if(input.includes("start quiz")){
-        return `You have 5 Modes Choose one:
-
-Easy Mode
-Normal Mode
-Hard Mode
-Extreme Mode
-Impossible Mode
-
-Type your mode to begin.`;
+    if(input === "3"){
+        localStorage.clear();
+        return "Memory wiped successfully.";
     }
 
-    if(input.includes("hello")||input.includes("hi")||input.includes("assalamu")){
-        return "Peace be upon you 🌿 I am happy to meet you. How can I assist you today?";
+    if(input === "4"){
+        aiState.mood = "GOD MODE";
+        return "⚡ GOD MODE ENABLED ⚡";
     }
 
-    if(input.includes("sad")){
-        return "I’m here with you. Tell me what happened.";
+    if(input === "5"){
+        return "Simulation shutting down... (not really 😏)";
     }
 
-    return "Hmm… interesting. Tell me more.";
-}
+    if(input === "6"){
+        return `
+Hidden Stats:
 
-function getJokes(type){
-
-    let jokes=[];
-
-    if(type.includes("savage")){
-        for(let i=1;i<=25;i++)
-            jokes.push(i+". Savage joke number "+i+" 😎");
+Mood: ${aiState.mood}
+Experience: ${aiState.experience}
+Admin: ${isAdmin}
+Storage Size: ${localStorage.length}
+        `;
     }
 
-    else if(type.includes("dark")){
-        for(let i=1;i<=25;i++)
-            jokes.push(i+". Dark but safe joke number "+i+" 😅");
-    }
-
-    else if(type.includes("school")){
-        for(let i=1;i<=25;i++)
-            jokes.push(i+". School joke number "+i+" 📚");
-    }
-
-    else if(type.includes("ai")){
-        for(let i=1;i<=25;i++)
-            jokes.push(i+". AI joke number "+i+" 🤖");
-    }
-
-    else if(type.includes("pakistani")){
-        for(let i=1;i<=25;i++)
-            jokes.push(i+". Pakistani joke number "+i+" 🇵🇰");
-    }
-
-    else{
-        return "Invalid joke type.";
-    }
-
-    return jokes.join("\n");
+    return null;
 }
