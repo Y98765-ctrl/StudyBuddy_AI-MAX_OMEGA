@@ -1,8 +1,11 @@
-function calculate(input){
+function isMathExpression(input){
+    return /^[0-9+\-*/(). ]+$/.test(input);
+}
+
+function calculate(expr){
     try{
-        if(input.match(/^[0-9+\-*/().% ]+$/)){
-            return "🧮 Result: " + eval(input);
-        }
-    }catch(e){}
-    return null;
+        return "Result: "+eval(expr);
+    }catch{
+        return "Calculation error";
+    }
 }
