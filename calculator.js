@@ -1,10 +1,8 @@
-function solveMath(input){
-    if(/^[0-9+\-*/().% ]+$/.test(input)){
-        try{
-            return "The answer is "+eval(input);
-        }catch{
-            return null;
+function calculate(input){
+    try{
+        if(input.match(/^[0-9+\-*/().% ]+$/)){
+            return "🧮 Result: " + eval(input);
         }
-    }
+    }catch(e){}
     return null;
 }
