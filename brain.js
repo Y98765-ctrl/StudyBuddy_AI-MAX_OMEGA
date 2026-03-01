@@ -1,164 +1,59 @@
-let isAdmin = false;
-let aiState = { mood:"stable", xp:0 };
+let SYSTEM = {
+    isAdmin:false,
+    lock:false,
+    freeze:false,
+    personality:"default",
+    xp:0
+};
 
 function checkAdmin(input){
-    if(input === "my name is muhammad yousaf"){
-        isAdmin = true;
-        return "👑 Admin Access Granted. Type 'admin panel'";
+    if(input.toLowerCase()==="my name is muhammad yousaf"){
+        SYSTEM.isAdmin=true;
+        return "👑 Creator Access Granted";
     }
     return null;
 }
 
 function executeAdmin(input){
+    if(!SYSTEM.isAdmin) return null;
+    if(!input.startsWith("admin:")) return null;
 
-    if(!isAdmin) return null;
+    let cmd=input.replace("admin:","").trim().toLowerCase();
 
-    if(input === "admin panel"){
-        return `
-⚙️ ADMIN PANEL ⚙️
-admin: typing box
-admin: change title YourTitle
-admin: set mood calm
-admin: add xp 500
-admin: system color gold
-admin: reset ui
-        `;
-    }
+    if(cmd==="lock") {SYSTEM.lock=true; return "🔒 Locked";}
+    if(cmd==="unlock") {SYSTEM.lock=false; return "🔓 Unlocked";}
+    if(cmd==="freeze") {SYSTEM.freeze=true; return "🧊 Frozen";}
+    if(cmd==="unfreeze") {SYSTEM.freeze=false; return "🔥 Active";}
+    if(cmd==="clear") {document.getElementById("chat").innerHTML=""; return "Cleared";}
+    if(cmd==="teacher") {SYSTEM.personality="teacher"; return "Teacher Mode";}
+    if(cmd==="hacker") {SYSTEM.personality="hacker"; return "Hacker Mode";}
+    if(cmd==="stats") return analyticsReport();
 
-    if(input.startsWith("admin:")){
-
-        let command = input.replace("admin:","").trim().toLowerCase();
-
-        if(command === "typing box"){
-            createBroadcastBox();
-            return "📡 Broadcast Control Activated.";
-        }
-
-        if(command.startsWith("change title")){
-            let title = input.replace("admin: change title","").trim();
-            if(title){
-                document.getElementById("systemTitle").innerText = title;
-                return "Title changed.";
-            }
-        }
-
-        if(command.startsWith("set mood")){
-            aiState.mood = input.replace("admin: set mood","").trim();
-            return "Mood updated.";
-        }
-
-        if(command.startsWith("add xp")){
-            let value = parseInt(input.replace("admin: add xp","").trim());
-            if(!isNaN(value)){
-                aiState.xp += value;
-                return "XP updated.";
-            }
-        }
-
-        if(command.startsWith("system color")){
-            let color = input.replace("admin: system color","").trim();
-            document.querySelector(".chat-container").style.boxShadow =
-                "0 0 30px " + color;
-            return "Color changed.";
-        }
-
-        if(command === "reset ui"){
-            document.querySelector(".chat-container").style.boxShadow =
-                "0 0 25px cyan";
-            return "UI Reset.";
-        }
-    }
-
-    return null;
+    return "Unknown admin command";
 }
-
-/* ===== BROADCAST ===== */
-
-let broadcastBox=null;
-
-function createBroadcastBox(){
-
-    if(broadcastBox) return;
-
-    const container=document.querySelector(".chat-container");
-
-    broadcastBox=document.createElement("div");
-    broadcastBox.style.marginTop="10px";
-    broadcastBox.style.display="flex";
-    broadcastBox.style.gap="5px";
-
-    let input=document.createElement("input");
-    input.placeholder="Broadcast...";
-    input.style.flex="1";
-    input.style.padding="8px";
-
-    let btn=document.createElement("button");
-    btn.innerText="Send";
-    btn.style.padding="8px";
-
-    broadcastBox.appendChild(input);
-    broadcastBox.appendChild(btn);
-    container.appendChild(broadcastBox);
-
-    btn.onclick=send;
-    input.addEventListener("keypress",e=>{
-        if(e.key==="Enter") send();
-    });
-
-    function send(){
-        if(input.value.trim()){
-            showBroadcast(input.value.trim());
-            input.value="";
-        }
-    }
-}
-
-function showBroadcast(text){
-    let banner=document.createElement("div");
-    banner.innerText=text;
-
-    banner.style.position="fixed";
-    banner.style.top="30px";
-    banner.style.left="50%";
-    banner.style.transform="translateX(-50%)";
-    banner.style.background="gold";
-    banner.style.color="black";
-    banner.style.padding="12px 25px";
-    banner.style.borderRadius="25px";
-    banner.style.fontWeight="bold";
-    banner.style.zIndex="9999";
-
-    document.body.appendChild(banner);
-
-    setTimeout(()=>banner.remove(),5000);
-}
-
-/* ===== AI RESPONSE ===== */
 
 function getResponse(input){
 
-    aiState.xp++;
+    SYSTEM.xp++;
 
-    let adminCheck=checkAdmin(input.toLowerCase());
-    if(adminCheck) return adminCheck;
+    let adminLogin=checkAdmin(input);
+    if(adminLogin) return adminLogin;
 
     let adminAction=executeAdmin(input);
     if(adminAction) return adminAction;
 
-    let lower=input.toLowerCase();
+    if(SYSTEM.lock) return "Chat is locked.";
+    if(SYSTEM.freeze) return null;
 
-    if(lower.includes("hello")||lower.includes("hi"))
-        return "Hello 👋";
+    if(isMathExpression(input)) return calculate(input);
 
-    if(input.match(/^[0-9+\-*/(). ]+$/)){
-        try{ return "Result: "+eval(input); }
-        catch{ return "Error"; }
-    }
+    if(SYSTEM.personality==="teacher")
+        return "Let me explain that clearly.";
+    if(SYSTEM.personality==="hacker")
+        return "Accessing encrypted knowledge...";
 
     return "I am listening.";
 }
-
-/* ===== CHAT SYSTEM ===== */
 
 function sendMessage(){
 
@@ -167,15 +62,20 @@ function sendMessage(){
     if(!input) return;
 
     addMessage(input,"user");
+    memoryStore(input,"user");
     inputField.value="";
 
     setTimeout(()=>{
-        addMessage(getResponse(input),"ai");
+        let response=getResponse(input);
+        if(response){
+            addMessage(response,"ai");
+            memoryStore(response,"ai");
+            speak(response);
+        }
     },300);
 }
 
 function addMessage(text,type){
-
     let chat=document.getElementById("chat");
     let div=document.createElement("div");
     div.className="message "+type;
