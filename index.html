@@ -1,90 +1,181 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>AURA - Architect Intelligence</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>AURA - Architect Intelligence</title>
+
+<style>
+/* ===== RESET ===== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* ===== BODY ===== */
+body{
+    height:100vh;
+    overflow:hidden;
+    background:black;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* ===== BACKGROUND CANVAS ===== */
+#bgCanvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+}
+
+/* ===== CHAT CONTAINER ===== */
+.chat-container{
+    width:450px;
+    max-width:95%;
+    height:600px;
+    max-height:90vh;
+    background:rgba(20,20,20,0.95);
+    border-radius:20px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:0 0 25px cyan;
+}
+
+/* ===== TITLE ===== */
+.chat-container h1{
+    text-align:center;
+    margin-bottom:10px;
+    color:white;
+    font-size:18px;
+}
+
+/* ===== CHAT AREA ===== */
+#chat{
+    flex:1;
+    overflow-y:auto;
+    padding-right:5px;
+}
+
+/* ===== MESSAGE ===== */
+.message{
+    padding:8px 12px;
+    margin:6px 0;
+    border-radius:10px;
+    font-size:14px;
+    word-wrap:break-word;
+}
+
+.user{
+    background:#00c6ff;
+    color:black;
+    align-self:flex-end;
+}
+
+.ai{
+    background:#333;
+    color:white;
+    align-self:flex-start;
+}
+
+/* ===== INPUT AREA ===== */
+.input-area{
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+#userInput{
+    flex:1;
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    outline:none;
+}
+
+#sendBtn{
+    padding:10px 15px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#00e5ff;
+    font-weight:bold;
+}
+</style>
 </head>
+
 <body>
 
 <canvas id="bgCanvas"></canvas>
 
-<div class="main-wrapper">
-    <div class="chat-container">
-        <h1 id="systemTitle">🧠 AURA - Architect Intelligence</h1>
+<div class="chat-container">
+    <h1 id="systemTitle">🧠 AURA - Architect Intelligence</h1>
+    <div id="chat"></div>
 
-        <div id="chat"></div>
-
-        <div class="input-area">
-            <input type="text" id="userInput" placeholder="Speak...">
-            <button id="sendBtn">Send</button>
-        </div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Speak...">
+        <button id="sendBtn">Send</button>
     </div>
 </div>
 
 <script src="brain.js"></script>
 
 <script>
-/* ===== SEND BUTTON FIX ===== */
-
+/* ===== SEND BUTTON ===== */
 document.getElementById("sendBtn").addEventListener("click", sendMessage);
-
 document.getElementById("userInput").addEventListener("keypress", function(e){
-    if(e.key === "Enter"){
-        sendMessage();
-    }
+    if(e.key === "Enter") sendMessage();
 });
 
-/* ===== RESPONSIVE 3D STARFIELD ===== */
-
+/* ===== STARFIELD BACKGROUND ===== */
 const canvas = document.getElementById("bgCanvas");
 const ctx = canvas.getContext("2d");
 
-function resizeCanvas(){
+function resize(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+resize();
+window.addEventListener("resize", resize);
 
 let stars = [];
 
-function initStars(){
-    stars = [];
-    for(let i=0;i<250;i++){
-        stars.push({
-            x: Math.random()*canvas.width - canvas.width/2,
-            y: Math.random()*canvas.height - canvas.height/2,
-            z: Math.random()*1000
-        });
-    }
+for(let i=0;i<250;i++){
+    stars.push({
+        x:Math.random()*canvas.width - canvas.width/2,
+        y:Math.random()*canvas.height - canvas.height/2,
+        z:Math.random()*1000
+    });
 }
-initStars();
 
-function animateStars(){
-    ctx.fillStyle = "black";
+function animate(){
+    ctx.fillStyle="black";
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     for(let star of stars){
         star.z -= 2;
-        if(star.z <= 0) star.z = 1000;
+        if(star.z<=0) star.z=1000;
 
-        let k = 200 / star.z;
-        let px = star.x * k + canvas.width/2;
-        let py = star.y * k + canvas.height/2;
+        let k=200/star.z;
+        let x=star.x*k + canvas.width/2;
+        let y=star.y*k + canvas.height/2;
 
-        let size = (1 - star.z/1000) * 3;
+        let size=(1-star.z/1000)*3;
 
-        ctx.fillStyle = "white";
+        ctx.fillStyle="white";
         ctx.beginPath();
-        ctx.arc(px, py, size, 0, Math.PI*2);
+        ctx.arc(x,y,size,0,Math.PI*2);
         ctx.fill();
     }
 
-    requestAnimationFrame(animateStars);
+    requestAnimationFrame(animate);
 }
-
-animateStars();
+animate();
 </script>
 
 </body>
