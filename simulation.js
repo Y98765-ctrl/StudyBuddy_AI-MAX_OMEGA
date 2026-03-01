@@ -1,11 +1,10 @@
-let progress = 0;
-let interval = setInterval(()=>{
-    progress += 2;
-    document.getElementById("progress").style.width = progress + "%";
+setInterval(()=>{
+    document.getElementById("cpu").innerText=Math.floor(Math.random()*30+50);
+    document.getElementById("gpu").innerText=Math.floor(Math.random()*20+60);
+},2000);
 
-    if(progress >= 100){
-        clearInterval(interval);
-        document.getElementById("loadingScreen").classList.add("hidden");
-        document.getElementById("mainUI").classList.remove("hidden");
-    }
-}, 60);
+function trainSimulation(){
+    addMessage("Training neural network...","ai");
+    setTimeout(()=>addMessage("Optimizing parameters...","ai"),1000);
+    setTimeout(()=>addMessage("Training complete. Intelligence improved.","ai"),2000);
+}
